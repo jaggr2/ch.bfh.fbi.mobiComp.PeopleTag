@@ -1,6 +1,7 @@
 package ch.bfh.fbi.mobiComp.PeopleTag;
 
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,7 +21,7 @@ public class MainActivity extends Activity {
     }
 
 
-    public void registerPosition(View view)
+    public void registerPosition()
     {
         Toast.makeText(this, "Position Registered", Toast.LENGTH_SHORT).show();
     }
@@ -37,12 +38,19 @@ public class MainActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menuitem_search:
-                Toast.makeText(this, getString(R.string.ui_menu_search),
-                        Toast.LENGTH_SHORT).show();
+                PeopleSearch peopleSearchFragment = new PeopleSearch();//(PeopleSearch) getFragmentManager().findFragmentById(R.id.people_search_fragment);
+
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.fragment_container, peopleSearchFragment);
+                // standard transition animation
+                ft.setTransition(FragmentTransaction.
+                        TRANSIT_FRAGMENT_FADE);
+                // enable reverting the Fragment change via the back button
+                ft.addToBackStack(null); // conserve previous old details fragment
+                ft.commit(); // schedule transaction
                 return true;
             case R.id.menuitem_send:
-                Toast.makeText(this, getString(R.string.ui_menu_send),
-                        Toast.LENGTH_SHORT).show();
+                registerPosition();
                 return true;
             case R.id.menuitem_add:
                 Toast.makeText(this, getString(R.string.ui_menu_add),
