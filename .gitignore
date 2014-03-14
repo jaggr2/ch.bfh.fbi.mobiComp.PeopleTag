@@ -1,4 +1,6 @@
 /.idea/
+/AndroidApp/bin/
+/AndroidApp/out/
 
 *.class
 
