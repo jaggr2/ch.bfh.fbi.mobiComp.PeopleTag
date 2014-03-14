@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ch.bfh.fbi.mobiComp.PeopleTag.iml" filepath="$PROJECT_DIR$/ch.bfh.fbi.mobiComp.PeopleTag.iml" />
+      <module fileurl="file://$PROJECT_DIR$/AndroidApp/AndroidApp.iml" filepath="$PROJECT_DIR$/AndroidApp/AndroidApp.iml" />
     </modules>
   </component>
 </project>
