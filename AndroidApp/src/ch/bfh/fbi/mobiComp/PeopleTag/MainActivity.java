@@ -41,14 +41,14 @@ public class MainActivity extends Activity {
             case R.id.menuitem_search:
                 PeopleSearch peopleSearchFragment = new PeopleSearch();//(PeopleSearch) getFragmentManager().findFragmentById(R.id.people_search_fragment);
 
-//                FragmentTransaction ft = getFragmentManager().beginTransaction();
-//                ft.replace(R.id.fragment_container, peopleSearchFragment);
-//                // standard transition animation
-//                ft.setTransition(FragmentTransaction.
-//                        TRANSIT_FRAGMENT_FADE);
-//                // enable reverting the Fragment change via the back button
-//                ft.addToBackStack(null); // conserve previous old details fragment
-//                ft.commit(); // schedule transaction
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.fragment_container, peopleSearchFragment);
+                // standard transition animation
+                ft.setTransition(FragmentTransaction.
+                        TRANSIT_FRAGMENT_FADE);
+                // enable reverting the Fragment change via the back button
+                ft.addToBackStack(null); // conserve previous old details fragment
+                ft.commit(); // schedule transaction
                 return true;
             case R.id.menuitem_send:
                 registerPosition();
