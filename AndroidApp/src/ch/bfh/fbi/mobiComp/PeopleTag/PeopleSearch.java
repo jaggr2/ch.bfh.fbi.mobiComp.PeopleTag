@@ -13,8 +13,6 @@ import android.view.ViewGroup;
 public class PeopleSearch extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-
         return inflater.inflate(R.layout.people_search_fragment, container, false);
 
     }

@@ -57,7 +57,7 @@ public class UserInfoDownloader extends AsyncTask<String, Void, Boolean> {
     	@Override
         protected Boolean doInBackground(String ... Params) { // this method runs in dedicated non-UI thread
     		    		
-    		String searchURL ="http://peopletag.apiary-mock.com/users";
+    		String searchURL ="http://peopletag.xrj.ch/users";
         	// to determine the structure of the json formatted response, download this url into
         	// a JSON formatter such as http://jsonformat.com
     		// Then copy/paste the formatted response into an editor that supports syntax highlighting
@@ -79,15 +79,15 @@ public class UserInfoDownloader extends AsyncTask<String, Void, Boolean> {
     				JSONObject JSONsessionObject = JSONsessionArray.getJSONObject(i);  // get a container of an array element
     	                        
     				// the container contains name-value pairs -> retrieve value by name
-    				UserData tweet = new UserData(
+    				UserData data = new UserData(
     	               				    // mind security threats resulting from the get method internally using eval
     									// (exploits by malicious content in the response are feasible)
     									// we do not fix this for the moti project as security is not a concern
-    	            					JSONsessionObject.getInt("id"),
+    	            					JSONsessionObject.get("_id").toString(),
     	            					JSONsessionObject.get("displayName").toString(),
-                                        JSONsessionObject.getLong("currentLatitude"),
-                                        JSONsessionObject.getLong("currentLongitude"));
-    				datas.add(tweet);
+                                        JSONsessionObject.getDouble("currentLatitude"),
+                                        JSONsessionObject.getDouble("currentLongitude"));
+    				datas.add(data);
     			} // for (int i = 0; i < JSONsessionArray.length(); i++)
     			querySuccessful = true;
     		} catch (JSONException e) {

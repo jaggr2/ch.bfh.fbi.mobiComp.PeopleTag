@@ -42,7 +42,7 @@ public class UserDataAdapter extends ArrayAdapter<UserData> {
 			}
 
 			if (tvLocation != null) {
-                tvLocation.setText("Latitude: " + Long.toString(data.getLatitude()) + " Longitude: " + Long.toString(data.getLongitude()));
+                tvLocation.setText("Latitude: " + Double.toString(data.getLatitude()) + " Longitude: " + Double.toString(data.getLongitude()));
 			}
 			
 		}

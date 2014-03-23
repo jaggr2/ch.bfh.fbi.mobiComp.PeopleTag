@@ -5,14 +5,14 @@ package ch.bfh.fbi.mobiComp.PeopleTag;
  * Created by Pascal on 21.03.14.
  */
 public class UserData {
-    Integer id;
+    String id;
     String displayName;
-    long latitude;
-    long longitude;
+    double latitude;
+    double longitude;
 
 
 
-    public UserData(Integer id, String displayName, long latitude, long longitude)
+    public UserData(String id, String displayName, double latitude, double longitude)
     {
         this.id = id;
         this.displayName = displayName;
@@ -21,7 +21,7 @@ public class UserData {
 
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
@@ -29,11 +29,11 @@ public class UserData {
         return displayName;
     }
 
-    public long getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public long getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 }
