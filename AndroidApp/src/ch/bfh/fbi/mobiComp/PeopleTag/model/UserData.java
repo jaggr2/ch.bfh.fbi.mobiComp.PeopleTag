@@ -1,4 +1,4 @@
-package ch.bfh.fbi.mobiComp.PeopleTag;
+package ch.bfh.fbi.mobiComp.PeopleTag.model;
 
 
 import android.content.Context;

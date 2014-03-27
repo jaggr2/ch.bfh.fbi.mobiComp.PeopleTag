@@ -1,4 +1,4 @@
-package ch.bfh.fbi.mobiComp.PeopleTag;
+package ch.bfh.fbi.mobiComp.PeopleTag.listener;
 
 import android.location.Address;
 import android.location.Geocoder;

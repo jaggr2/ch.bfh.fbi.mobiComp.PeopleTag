@@ -1,9 +1,12 @@
-package ch.bfh.fbi.mobiComp.PeopleTag;
+package ch.bfh.fbi.mobiComp.PeopleTag.tasks;
 
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ListView;
+import ch.bfh.fbi.mobiComp.PeopleTag.R;
+import ch.bfh.fbi.mobiComp.PeopleTag.gui.UserDataAdapter;
+import ch.bfh.fbi.mobiComp.PeopleTag.model.UserData;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;

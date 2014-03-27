@@ -1,4 +1,4 @@
-package ch.bfh.fbi.mobiComp.PeopleTag;
+package ch.bfh.fbi.mobiComp.PeopleTag.gui;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
@@ -10,8 +10,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
+import ch.bfh.fbi.mobiComp.PeopleTag.R;
+import ch.bfh.fbi.mobiComp.PeopleTag.listener.GeoPositionListener;
+import ch.bfh.fbi.mobiComp.PeopleTag.tasks.UserInfoDownloader;
 
 public class MainActivity extends Activity {
     /**
@@ -21,6 +23,12 @@ public class MainActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        // TODO LAN Need to Refresh the User Info from time to time -> is move to
+        // GeoPositionListener onPositionChange a good idea???
+        // Maybe tooMuch dataTransfer between Client/Server because the data often changes
+        // but it would be the best Solution when our position changes we need to be sure
+        // the others are at the current locations to display valid data...
+        // Sure the app should have a refresh button to updates myLocation and the friendslocation...
         new UserInfoDownloader(this).execute();
 
 
@@ -55,7 +63,7 @@ public class MainActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menuitem_search:
-                PeopleSearch peopleSearchFragment = new PeopleSearch();//(PeopleSearch) getFragmentManager().findFragmentById(R.id.people_search_fragment);
+                PeopleSearchListFragment peopleSearchFragment = new PeopleSearchListFragment();//(PeopleSearch) getFragmentManager().findFragmentById(R.id.people_search_fragment);
 
                 MediaPlayer mySound = MediaPlayer.create(MainActivity.this,R.raw.sonar);
                 mySound.start();

@@ -1,4 +1,4 @@
-package ch.bfh.fbi.mobiComp.PeopleTag;
+package ch.bfh.fbi.mobiComp.PeopleTag.gui;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import ch.bfh.fbi.mobiComp.PeopleTag.R;
+import ch.bfh.fbi.mobiComp.PeopleTag.model.UserData;
 
 import java.util.ArrayList;
 
