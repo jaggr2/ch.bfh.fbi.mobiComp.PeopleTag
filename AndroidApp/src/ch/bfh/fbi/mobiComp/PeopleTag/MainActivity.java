@@ -2,6 +2,9 @@ package ch.bfh.fbi.mobiComp.PeopleTag;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.content.Context;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.Menu;
@@ -20,12 +23,24 @@ public class MainActivity extends Activity {
         setContentView(R.layout.main);
         new UserInfoDownloader(this).execute();
 
+
+        // Current Location should be update everytime...
+        LocationManager locationManager = (LocationManager)
+                getSystemService(Context.LOCATION_SERVICE);
+
+        LocationListener locationListener = new GeoPositionListener();
+        locationManager.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
     }
 
 
+    // Should only used to force a location Update...
     public void registerPosition()
     {
-        Toast.makeText(this, "Position Registered", Toast.LENGTH_SHORT).show();
+        LocationManager locationManager = (LocationManager)
+                getSystemService(Context.LOCATION_SERVICE);
+
+        Toast.makeText(this, "Position Registered: " + locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).toString(), Toast.LENGTH_SHORT).show();
     }
 
 

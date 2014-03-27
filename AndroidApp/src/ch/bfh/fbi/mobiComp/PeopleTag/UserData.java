@@ -1,6 +1,10 @@
 package ch.bfh.fbi.mobiComp.PeopleTag;
 
 
+import android.content.Context;
+import android.location.Location;
+import android.location.LocationManager;
+
 /**
  * Created by Pascal on 21.03.14.
  */
@@ -35,5 +39,16 @@ public class UserData {
 
     public double getLongitude() {
         return longitude;
+    }
+
+    public Location getUserLocation(){
+    Location location = new Location("");
+        location.setLatitude(latitude);
+        location.setLongitude(longitude);
+        return location;
+    }
+
+    public float getDistanceToUserLocation(Location current){
+        return current.distanceTo(getUserLocation());
     }
 }
