@@ -48,7 +48,36 @@ public class UserData {
         return location;
     }
 
+    /**
+     * Get distance from user location to current Location
+     *
+     * @param current
+     * @return
+     */
     public float getDistanceToUserLocation(Location current){
         return current.distanceTo(getUserLocation());
+    }
+
+    /**
+     * Get Angle between current Location and UserLocation
+     *
+     * @param current
+     * @return
+     */
+    private double getAngleFromCurrentLocationToUserLoaction(Location current) {
+
+        double dLon = (getUserLocation().getLongitude() - current.getLongitude());
+
+        double y = Math.sin(dLon) * Math.cos(getUserLocation().getLatitude());
+        double x = Math.cos(current.getLatitude()) * Math.sin(getUserLocation().getLatitude()) - Math.sin(current.getLatitude())
+                * Math.cos(getUserLocation().getLatitude()) * Math.cos(dLon);
+
+        double brng = Math.atan2(y, x);
+
+        brng = Math.toDegrees(brng);
+        brng = (brng + 360) % 360;
+        brng = 360 - brng;
+
+        return brng;
     }
 }
