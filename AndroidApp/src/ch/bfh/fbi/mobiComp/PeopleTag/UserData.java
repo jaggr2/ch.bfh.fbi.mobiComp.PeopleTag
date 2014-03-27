@@ -41,6 +41,11 @@ public class UserData {
         return longitude;
     }
 
+    /**
+     * Casts the userData to a geo Location
+     *
+     * @return Location
+     */
     public Location getUserLocation(){
     Location location = new Location("");
         location.setLatitude(latitude);
@@ -52,7 +57,7 @@ public class UserData {
      * Get distance from user location to current Location
      *
      * @param current
-     * @return
+     * @return float Distance
      */
     public float getDistanceToUserLocation(Location current){
         return current.distanceTo(getUserLocation());
@@ -62,7 +67,7 @@ public class UserData {
      * Get Angle between current Location and UserLocation
      *
      * @param current
-     * @return
+     * @return double angle
      */
     private double getAngleFromCurrentLocationToUserLoaction(Location current) {
 
