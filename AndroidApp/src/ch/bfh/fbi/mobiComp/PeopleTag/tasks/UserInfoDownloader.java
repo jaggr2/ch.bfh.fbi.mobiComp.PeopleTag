@@ -93,8 +93,8 @@ public class UserInfoDownloader extends AsyncTask<String, Void, Boolean> {
     									// we do not fix this for the moti project as security is not a concern
     	            					JSONsessionObject.get("_id").toString(),
     	            					JSONsessionObject.get("displayName").toString(),
-                                        JSONsessionObject.getDouble("currentLatitude"),
-                                        JSONsessionObject.getDouble("currentLongitude"),
+                                        JSONsessionObject.optDouble("currentLatitude",0.0),
+                                        JSONsessionObject.optDouble("currentLongitude",0.0),
                                         JSONsessionObject.getString("updatedAt"));
     				datas.add(data);
     			} // for (int i = 0; i < JSONsessionArray.length(); i++)

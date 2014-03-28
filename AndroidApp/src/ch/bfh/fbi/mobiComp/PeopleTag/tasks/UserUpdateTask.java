@@ -118,8 +118,8 @@ public abstract class UserUpdateTask extends AsyncTask<String, Integer, UserData
                 // we do not fix this for the moti project as security is not a concern
                 return new UserData(rootJsonObject.get("_id").toString(),
                         rootJsonObject.get("displayName").toString(),
-                        rootJsonObject.getDouble("currentLatitude"),
-                        rootJsonObject.getDouble("currentLongitude"),
+                        rootJsonObject.optDouble("currentLatitude",0.0),
+                        rootJsonObject.optDouble("currentLongitude",0.0),
                         rootJsonObject.getString("updatedAt"));
             } else if (rootJsonObject.has("msg")) {
 

@@ -12,27 +12,8 @@ import ch.bfh.fbi.mobiComp.PeopleTag.tasks.UserUpdateTask;
 
 public class SetupActivity extends Activity {
 
-    private static SetupActivity instance;
 
-    public static SetupActivity getInstance() {
-        if(instance == null) {
-            instance = new SetupActivity();
-        }
-        return instance;
-    }
 
-    public static final String PREFS_NAME = "PeopleTagUser";
-    public static final String PREF_ID = "ID";
-    public static final String PREF_DISPLAYNAME = "displayName";
-    private SharedPreferences settings = null;
-
-    public String getUserID() {
-        return (settings != null ? this.settings.getString(PREF_ID, "") : "");
-    }
-
-    public String getDisplayName() {
-        return (settings != null ? this.settings.getString(PREF_DISPLAYNAME, "") : "");
-    }
 
     /**
      * Called when the activity is first created.
@@ -41,28 +22,26 @@ public class SetupActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.setup);
 
-        settings = getSharedPreferences(PREFS_NAME, 0);
-
         final Button button = (Button) findViewById(R.id.button2);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 registerUser(v);
             }
         });
-        button.setText((getUserID().length() > 0 ? "Update" : "Register"));
+        button.setText(((PeopleTagApplication)getApplication()).getUserID().length() > 0 ? "Update" : "Register");
 
         final ProgressBar progressBarSetup = (ProgressBar) findViewById(R.id.progressBarSetup);
         progressBarSetup.setVisibility(View.INVISIBLE);
 
         final EditText editText = (EditText)this.findViewById(R.id.editTextDisplayName);
-        editText.setText(getDisplayName());
+        editText.setText(((PeopleTagApplication)getApplication()).getDisplayName());
 
         final TextView textViewTitle = (TextView) findViewById(R.id.textViewTitle);
-        textViewTitle.setText((getUserID().length() > 0 ? "Update your user" : "Register as new User"));
+        textViewTitle.setText(((PeopleTagApplication)getApplication()).getUserID().length() > 0 ? "Update your user" : "Register as new User");
 
         final TextView textViewSubTitle = (TextView) findViewById(R.id.textViewSubTitle);
-        textViewSubTitle.setText((getUserID().length() > 0 ? "Your ID: " + getUserID() : "Your ID: none"));
-        textViewSubTitle.setVisibility((getUserID().length() > 0 ? View.VISIBLE : View.INVISIBLE));
+        textViewSubTitle.setText(((PeopleTagApplication)getApplication()).getUserID().length() > 0 ? "Your ID: " + ((PeopleTagApplication)getApplication()).getUserID() : "Your ID: none");
+        textViewSubTitle.setVisibility(((PeopleTagApplication)getApplication()).getUserID().length() > 0 ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override
@@ -101,21 +80,14 @@ public class SetupActivity extends Activity {
 
         Location loc = (mainActivity.getActualLocation() != null ? mainActivity.getActualLocation() : null);
 
-        final String originalId = getUserID();
+        final String originalId = ((PeopleTagApplication)getApplication()).getUserID();
 
         UserUpdateTask userUpdateTask = new UserUpdateTask(originalId, editText.getText().toString(), loc) {
             @Override
             public void onPostExecute(UserData result) {
                 if(result != null) {
-                    // We need an Editor object to make preference changes.
-                    // All objects are from android.context.Context
-                    SharedPreferences.Editor editor = settings.edit();
 
-                    editor.putString(PREF_ID, result.getId());
-                    editor.putString(PREF_DISPLAYNAME, result.getDisplayName());
-
-                    // Commit the edits!
-                    editor.commit();
+                    ((PeopleTagApplication)getApplication()).setUserData(result);
 
                     finish();
                 }

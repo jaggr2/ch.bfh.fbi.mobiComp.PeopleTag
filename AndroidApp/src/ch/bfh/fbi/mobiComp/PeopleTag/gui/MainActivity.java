@@ -142,20 +142,23 @@ public class MainActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menuitem_search:
-//                if(!mySound.isPlaying()) {
-//                    mySound.start();
-//                }
+
 
                   UserInfoDownloader userInfoDownloader = new UserInfoDownloader(this);
                   userInfoDownloader.execute();
 
                   return true;
 //            case R.id.menuitem_send:
+            //                if(!mySound.isPlaying()) {
+//                    mySound.start();
+//                }
 //                registerPosition();
 //                return true;
-//            case R.id.menuitem_add:
-//                Toast.makeText(this, getString(R.string.ui_menu_add),
-//                        Toast.LENGTH_SHORT).show();
+            case R.id.menuitem_add:
+                Intent launchAddUser = new Intent(MainActivity.this,AddUserActivity.class);
+
+                startActivityForResult(launchAddUser, 0);
+                return true;
 
             case R.id.menuitem_setup:
                 Intent launchNewIntent = new Intent(MainActivity.this,SetupActivity.class);

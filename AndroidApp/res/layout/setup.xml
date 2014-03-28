@@ -16,7 +16,6 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="Setup People Tag"
                 android:id="@+id/textViewTitle"
-                android:textAlignment="center"
                 android:paddingTop="20dp"
                 android:height="100dp" />
 
@@ -26,8 +25,6 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="Your ID: none"
                 android:id="@+id/textViewSubTitle"
-                android:textAlignment="center"
-
                 android:onClick="@string/registerPosition"/>
 
         <TextView

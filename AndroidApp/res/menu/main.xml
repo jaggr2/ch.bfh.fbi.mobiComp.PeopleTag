@@ -13,13 +13,13 @@
             android:icon="@android:drawable/ic_menu_send"
             android:showAsAction="ifRoom"
             android:title="@string/ui_menu_send">
-    </item>
+    </item>-->
     <item
             android:id="@+id/menuitem_add"
             android:icon="@android:drawable/ic_menu_add"
             android:showAsAction="ifRoom"
             android:title="@string/ui_menu_add">
-    </item-->
+    </item>
     <item
             android:id="@+id/menuitem_setup"
             android:icon="@android:drawable/ic_menu_mylocation"
