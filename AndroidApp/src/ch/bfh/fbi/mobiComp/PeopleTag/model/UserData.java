@@ -57,10 +57,13 @@ public class UserData {
      * Get distance from user location to current Location
      *
      * @param current
-     * @return float Distance
+     * @return float Distance if distance cannot calculated 0 is returned
      */
     public float getDistanceToUserLocation(Location current){
-        return current.distanceTo(getUserLocation());
+        if(current != null) {
+            return current.distanceTo(getUserLocation());
+        }
+        else return 0;
     }
 
     /**
@@ -69,7 +72,7 @@ public class UserData {
      * @param current
      * @return double angle
      */
-    private double getAngleFromCurrentLocationToUserLoaction(Location current) {
+    public double getAngleFromCurrentLocationToUserLoaction(Location current) {
 
         double dLon = (getUserLocation().getLongitude() - current.getLongitude());
 

@@ -47,10 +47,7 @@ public class MainActivity extends Activity {
     // Should only used to force a location Update...
     public void registerPosition()
     {
-        LocationManager locationManager = (LocationManager)
-                getSystemService(Context.LOCATION_SERVICE);
-
-        Toast.makeText(this, "Position Registered: " + locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).toString(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Position Registered: " + gps.getLocation(), Toast.LENGTH_SHORT).show();
     }
 
 
