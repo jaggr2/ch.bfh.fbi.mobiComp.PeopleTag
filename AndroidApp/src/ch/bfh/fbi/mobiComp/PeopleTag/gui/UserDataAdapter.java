@@ -70,7 +70,6 @@ public class UserDataAdapter extends ArrayAdapter<UserData> {
 
     public static String readableDistance(double distanceInMeters) {
 
-
         if(distanceInMeters <= 0) return "0";
         distanceInMeters *= 1000; // convert to mm
 
