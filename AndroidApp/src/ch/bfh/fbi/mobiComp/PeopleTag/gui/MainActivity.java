@@ -43,16 +43,24 @@ public class MainActivity extends Activity {
     };;
 
     MediaPlayer mySound;
+    GeoTracker gps;
+
+    private static MainActivity singleton;
+
+    // Returns the application instance
+    public static MainActivity getInstance() {
+        return singleton;
+    }
 
     /**
      * Called when the activity is first created.
      */
 
-    GeoTracker gps;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        singleton = this;
+
         mySound = MediaPlayer.create(MainActivity.this,R.raw.sonar);
 
         setContentView(R.layout.main);
@@ -128,6 +136,7 @@ public class MainActivity extends Activity {
 
             case R.id.menuitem_setup:
                 Intent launchNewIntent = new Intent(MainActivity.this,SetupActivity.class);
+
                 startActivityForResult(launchNewIntent, 0);
                 return true;
 

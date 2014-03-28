@@ -2,6 +2,8 @@ package ch.bfh.fbi.mobiComp.PeopleTag.tasks;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 import ch.bfh.fbi.mobiComp.PeopleTag.R;
+import ch.bfh.fbi.mobiComp.PeopleTag.gui.SetupActivity;
 import ch.bfh.fbi.mobiComp.PeopleTag.gui.SonarPanelActivity;
 import ch.bfh.fbi.mobiComp.PeopleTag.gui.UserDataAdapter;
 import ch.bfh.fbi.mobiComp.PeopleTag.model.UserData;
@@ -34,13 +37,16 @@ public class UserRegisterTask extends AsyncTask<String, Void, Boolean> {
 
     private static final String TAG = "UserRegisterTask"; // for LogCat
     private Activity mHostActivity;
-    private UserData result = null;
+    private Location location;
+    public static UserData result = null;
+
 
     /*
          * Constructor
          */
-    public UserRegisterTask(Activity hostActivity) {
+    public UserRegisterTask(Activity hostActivity, Location location) {
         this.mHostActivity = hostActivity;
+        this.location = location;
     }
 
     @Override
@@ -53,19 +59,31 @@ public class UserRegisterTask extends AsyncTask<String, Void, Boolean> {
 
         EditText editText = (EditText) mHostActivity.findViewById(R.id.editTextDisplayName);
 
-        String json = "{ \"DisplayName\": \"" + editText.getText().toString() + "\" }";
+        String longitude = (location != null ? String.valueOf(location.getLongitude()) : "null");
+        String latitude = (location != null ? String.valueOf(location.getLatitude()) : "null");
+
+
+        String json = "{ " +
+                "\"displayName\": \"" + editText.getText().toString() + "\"," +
+                "\"currentLongitude\": " + longitude + "," +
+                "\"currentLatitude\": " + latitude +
+                " }";
 
         try {
             HttpResponse response = makePostRequest(url, json);
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                 jsonResponse = EntityUtils.toString(response.getEntity());
-                Log.d(TAG, "Contents of HTTP response: " + jsonResponse);
+                Log.d(TAG, "Contents of HTTP POST response: " + jsonResponse);
                 querySuccessful = true;
             } else {
-                Log.d(TAG, "HTTP Status Code was not 200 / OK");
+                Log.e(TAG, "HTTP POST did return: " + response.getStatusLine().getStatusCode());
             }
         } catch (Exception e) {
             Log.e(TAG, "Error loading " + url, e);
+        }
+
+        if(jsonResponse == null || !querySuccessful) {
+            return false;
         }
 
         try {
@@ -85,7 +103,17 @@ public class UserRegisterTask extends AsyncTask<String, Void, Boolean> {
 
         } catch (JSONException e) {
             Log.e(TAG, "JSON Exception", e);
+            return false;
         }
+
+        // We need an Editor object to make preference changes.
+        // All objects are from android.context.Context
+        SharedPreferences settings = mHostActivity.getSharedPreferences(SetupActivity.PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("ID", result.getId());
+
+        // Commit the edits!
+        editor.commit();
 
         return querySuccessful;
     }
@@ -94,21 +122,8 @@ public class UserRegisterTask extends AsyncTask<String, Void, Boolean> {
     protected void onPostExecute(Boolean querySuccessful) {
         if (querySuccessful) {
             mHostActivity.finish();
-            // display the tweets in a listView
-            /*
-            final ListView listView = (ListView) mHostActivity.findViewById(R.id.user_list);
-            listView.setAdapter(new UserDataAdapter(mHostActivity, R.layout.listitem, datas));
-            listView.setClickable(true);
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                    UserData o = (UserData) listView.getItemAtPosition(position);
-                    Intent intent = new Intent(mHostActivity, SonarPanelActivity.class);
-                    intent.putExtra("user", o.getDisplayName());
-                    mHostActivity.startActivity(intent);
-                }
-            });
-            */
+
+
         } else {
             // optionally handle the unsuccessful query
 /*

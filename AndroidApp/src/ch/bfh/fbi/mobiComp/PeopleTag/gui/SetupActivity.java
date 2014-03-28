@@ -1,33 +1,21 @@
 package ch.bfh.fbi.mobiComp.PeopleTag.gui;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import ch.bfh.fbi.mobiComp.PeopleTag.R;
-import ch.bfh.fbi.mobiComp.PeopleTag.model.UserData;
-import ch.bfh.fbi.mobiComp.PeopleTag.tasks.UserInfoDownloader;
 import ch.bfh.fbi.mobiComp.PeopleTag.tasks.UserRegisterTask;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 public class SetupActivity extends Activity {
 
-
-    private static final String TAG = "SetupActivity"; // for LogCat
-    private UserRegisterTask userRegisterTask = new UserRegisterTask(this);
+    public static final String PREFS_NAME = "PeopleTagUser";
 
     /**
      * Called when the activity is first created.
@@ -42,6 +30,15 @@ public class SetupActivity extends Activity {
                 registerUser(v);
             }
         });
+
+        // Restore preferences
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        String id = settings.getString("ID", "");
+
+        if(id != null && id.length() > 0) {
+            TextView textViewTitle = (TextView) findViewById(R.id.textViewTitle);
+            textViewTitle.setText("ID" + id);
+        }
     }
 
     public void registerUser(View view) {
@@ -55,6 +52,11 @@ public class SetupActivity extends Activity {
             return;
         }
 
+        MainActivity mainActivity = MainActivity.getInstance();
+
+        Location loc = (mainActivity.getActualLocation() != null ? mainActivity.getActualLocation() : null);
+
+        UserRegisterTask userRegisterTask = new UserRegisterTask(this, loc);
         userRegisterTask.execute();
         // start Task
     }
