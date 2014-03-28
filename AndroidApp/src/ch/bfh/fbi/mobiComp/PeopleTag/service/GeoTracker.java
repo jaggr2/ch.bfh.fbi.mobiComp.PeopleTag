@@ -29,6 +29,9 @@ public class GeoTracker extends Service implements LocationListener {
     double latitude; // latitude
     double longitude; // longitude
 
+    // Actual active provider
+    String actualActiveProvider = "";
+
     // The minimum distance to change Updates in meters
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
 
@@ -63,6 +66,8 @@ public class GeoTracker extends Service implements LocationListener {
 
             if (!isGPSEnabled && !isNetworkEnabled) {
                 // no network provider is enabled
+                showSettingsAlert();
+                stopSelf();
             } else {
                 this.canGetLocation = true;
                 // First get location from Network Provider
@@ -80,6 +85,7 @@ public class GeoTracker extends Service implements LocationListener {
                             longitude = location.getLongitude();
                             updateLocationOnMain(location);
                         }
+                        actualActiveProvider = LocationManager.NETWORK_PROVIDER;
                     }
                 }
                 // if GPS Enabled get lat/long using GPS Services
@@ -99,6 +105,7 @@ public class GeoTracker extends Service implements LocationListener {
                                 updateLocationOnMain(location);
                             }
                         }
+                        actualActiveProvider = LocationManager.GPS_PROVIDER;
                     }
                 }
             }
@@ -199,6 +206,10 @@ public class GeoTracker extends Service implements LocationListener {
 
     @Override
     public void onProviderDisabled(String provider) {
+        if (provider.equalsIgnoreCase(actualActiveProvider))
+        {
+            updateLocationOnMain(null);
+        }
     }
 
     @Override

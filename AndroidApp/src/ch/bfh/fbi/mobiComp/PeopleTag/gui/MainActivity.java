@@ -36,6 +36,12 @@ public class MainActivity extends Activity {
                 Toast.makeText(context, actualLoc.toString(),
                         Toast.LENGTH_SHORT).show();
             }
+            else if (intent.getParcelableExtra("location") == null)
+            {
+                Intent serviceIntent = new Intent(context, GeoTracker.class);
+                stopService(serviceIntent);
+                startService(serviceIntent);
+            }
         }
     };
 
@@ -140,8 +146,8 @@ public class MainActivity extends Activity {
                 return true;
 
             case R.id.menuitem_quit:
-                Toast.makeText(this, getString(R.string.ui_menu_quit),
-                        Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, getString(R.string.ui_menu_quit),
+//                        Toast.LENGTH_SHORT).show();
                 finish(); // close the activity
                 return true;
         }
