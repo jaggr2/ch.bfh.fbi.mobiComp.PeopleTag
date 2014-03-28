@@ -1,10 +1,8 @@
 package ch.bfh.fbi.mobiComp.PeopleTag.tasks;
 
-import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.util.Log;
-import ch.bfh.fbi.mobiComp.PeopleTag.gui.SetupActivity;
 import ch.bfh.fbi.mobiComp.PeopleTag.model.UserData;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -22,7 +20,6 @@ import java.io.UnsupportedEncodingException;
 public abstract class UserUpdateTask extends AsyncTask<String, Integer, UserData> {
 
     private static final String TAG = "UserUpdateTask"; // for LogCat
-    protected UserData result = null;
     private Location location;
     private String userID;
     private String displayName;
@@ -115,7 +112,7 @@ public abstract class UserUpdateTask extends AsyncTask<String, Integer, UserData
             this.publishProgress(100);
 
             // the container contains name-value pairs -> retrieve value by name
-            if(rootJsonObject.has("_id")) {
+            if (rootJsonObject.has("_id")) {
                 // mind security threats resulting from the get method internally using eval
                 // (exploits by malicious content in the response are feasible)
                 // we do not fix this for the moti project as security is not a concern
@@ -123,30 +120,27 @@ public abstract class UserUpdateTask extends AsyncTask<String, Integer, UserData
                         rootJsonObject.get("displayName").toString(),
                         rootJsonObject.getDouble("currentLatitude"),
                         rootJsonObject.getDouble("currentLongitude"));
-            }
-            else if (rootJsonObject.has("msg")) {
+            } else if (rootJsonObject.has("msg")) {
 
-                if(rootJsonObject.getLong("msg") == 0) {
-                   Log.e(TAG, "UserID does not exists on Server, try reregister it");
-                   userID = null;
-                   if( recursionCount < 3) {
+                if (rootJsonObject.getLong("msg") == 0) {
+                    Log.e(TAG, "UserID does not exists on Server, try reregister it");
+                    userID = null;
+                    if (recursionCount < 3) {
 
-                       try {
-                           Thread.sleep((long)Math.pow(2, recursionCount) * 1000);
-                       } catch (InterruptedException e) {
-                           Thread.interrupted();
-                       }
+                        try {
+                            Thread.sleep((long) Math.pow(2, recursionCount) * 1000);
+                        } catch (InterruptedException e) {
+                            Thread.interrupted();
+                        }
 
-                       return SendPost(recursionCount + 1);
-                   }
-                   else {
-                       return null;
-                   }
+                        return SendPost(recursionCount + 1);
+                    } else {
+                        return null;
+                    }
                 }
 
-                return new UserData(userID, displayName, (location != null ? location.getLongitude() : null), (location != null ? location.getLatitude() : null));
+                return new UserData(userID, displayName, (location != null ? location.getLongitude() : 0), (location != null ? location.getLatitude() : 0));
             }
-
         } catch (JSONException e) {
             Log.e(TAG, "JSON Exception", e);
         }
