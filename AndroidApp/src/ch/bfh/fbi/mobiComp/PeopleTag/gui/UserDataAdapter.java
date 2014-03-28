@@ -1,6 +1,9 @@
 package ch.bfh.fbi.mobiComp.PeopleTag.gui;
 
 import android.content.Context;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +41,7 @@ public class UserDataAdapter extends ArrayAdapter<UserData> {
 		if (data != null) {
 			TextView tvName = (TextView) v.findViewById(R.id.name);
 			TextView tvLocation = (TextView) v.findViewById(R.id.location);
+            TextView tvDistance = (TextView) v.findViewById(R.id.distance);
 
 			if (tvName != null) {
                 tvName.setText(data.getDisplayName());
@@ -46,6 +50,15 @@ public class UserDataAdapter extends ArrayAdapter<UserData> {
 			if (tvLocation != null) {
                 tvLocation.setText("Latitude: " + Double.toString(data.getLatitude()) + " Longitude: " + Double.toString(data.getLongitude()));
 			}
+
+            if (tvLocation != null) {
+                //TODO Lan hier müsste die Current Location sein (momentan dummy)
+               Location loc = new Location("");
+                loc.setLatitude(40);
+                loc.setLongitude(20);
+
+                tvDistance.setText("Distance: " + Double.toString(data.getDistanceToUserLocation(loc)));
+            }
 			
 		}
 		return v;
