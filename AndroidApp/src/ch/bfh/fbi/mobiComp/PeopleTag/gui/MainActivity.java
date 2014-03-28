@@ -6,11 +6,13 @@ import android.app.ListActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.text.style.UpdateAppearance;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,7 +27,20 @@ public class MainActivity extends Activity {
     public final static String LOCATION_UPDATE = "LocationUpdate";
     private UserInfoDownloader userInfoDownloader = new UserInfoDownloader(this);
     private Location actualLoc = null;
-    private BroadcastReceiver receiver;
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent)
+        {
+            if (intent.getParcelableExtra("location") instanceof Location) {
+
+                actualLoc = intent.getParcelableExtra("location");
+                final ListView listView = (ListView) findViewById(R.id.user_list);
+
+                Toast.makeText(context, actualLoc.toString(),
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+    };;
 
     /**
      * Called when the activity is first created.
@@ -45,24 +60,14 @@ public class MainActivity extends Activity {
         // Sure the app should have a refresh button to updates myLocation and the friendslocation...
         userInfoDownloader.execute();
 
-        receiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent)
-            {
-                 if (intent.getParcelableExtra("location") instanceof Location) {
-
-                     actualLoc = intent.getParcelableExtra("location");
-                     final ListView listView = (ListView) findViewById(R.id.user_list);
-
-                     Toast.makeText(context, actualLoc.toString(),
-                             Toast.LENGTH_SHORT).show();
-                 }
-            }
-        };
+        IntentFilter updateRecive = new IntentFilter();
+        updateRecive.addAction(LOCATION_UPDATE);
+        registerReceiver(receiver, updateRecive);
 
         // Current Location should be update everytime...
         //gps = new GeoTracker(MainActivity.this);
         startService(new Intent(this, GeoTracker.class));
+
         //if(!gps.canGetLocation()){
         //    gps.showSettingsAlert();
         //}
@@ -72,7 +77,9 @@ public class MainActivity extends Activity {
     // Should only used to force a location Update...
     public void registerPosition()
     {
-        //Toast.makeText(this, "Position Registered: Longitude: " + gps.getLongitude() + " Latitude: " + gps.getLatitude(), Toast.LENGTH_SHORT).show();
+        if (actualLoc != null) {
+            Toast.makeText(this, "Position Registered: Longitude: " + actualLoc.getLongitude() + " Latitude: " + actualLoc.getLatitude(), Toast.LENGTH_SHORT).show();
+        }
     }
 
 
@@ -128,6 +135,11 @@ public class MainActivity extends Activity {
     public GeoTracker getGeoTracker()
     {
         return this.gps;
+    }
+
+    public Location getActualLocation()
+    {
+        return this.actualLoc;
     }
 
 }
