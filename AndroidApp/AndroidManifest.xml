@@ -14,6 +14,7 @@
         </activity>
         <activity android:name=".gui.SonarPanelActivity"/>
         <service android:name=".service.GeoTracker"/>
+        <activity android:name=".gui.SetupActivity"/>
 
     </application>
 

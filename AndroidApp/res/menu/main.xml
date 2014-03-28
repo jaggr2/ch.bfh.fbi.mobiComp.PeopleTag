@@ -21,6 +21,12 @@
             android:title="@string/ui_menu_add">
     </item>
     <item
+            android:id="@+id/menuitem_setup"
+            android:icon="@android:drawable/ic_menu_upload"
+            android:showAsAction="ifRoom"
+            android:title="@string/ui_menu_setup">
+    </item>
+    <item
             android:id="@+id/menuitem_quit"
             android:icon="@android:drawable/ic_menu_close_clear_cancel"
             android:showAsAction="ifRoom"

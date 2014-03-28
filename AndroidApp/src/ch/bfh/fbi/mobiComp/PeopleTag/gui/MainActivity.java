@@ -42,6 +42,8 @@ public class MainActivity extends Activity {
         }
     };;
 
+    MediaPlayer mySound;
+
     /**
      * Called when the activity is first created.
      */
@@ -51,6 +53,8 @@ public class MainActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mySound = MediaPlayer.create(MainActivity.this,R.raw.sonar);
+
         setContentView(R.layout.main);
         // TODO LAN Need to Refresh the User Info from time to time -> is move to
         // GeoPositionListener onPositionChange a good idea???
@@ -103,8 +107,9 @@ public class MainActivity extends Activity {
             case R.id.menuitem_search:
                 //PeopleSearchListFragment peopleSearchFragment = new PeopleSearchListFragment();//(PeopleSearch) getFragmentManager().findFragmentById(R.id.people_search_fragment);
 
-                MediaPlayer mySound = MediaPlayer.create(MainActivity.this,R.raw.sonar);
-                mySound.start();
+                if(!mySound.isPlaying()) {
+                    mySound.start();
+                }
                 
 //                FragmentTransaction ft = getFragmentManager().beginTransaction();
 //                ft.replace(R.id.fragment_container, peopleSearchFragment);
@@ -121,6 +126,10 @@ public class MainActivity extends Activity {
             case R.id.menuitem_add:
                 Toast.makeText(this, getString(R.string.ui_menu_add),
                         Toast.LENGTH_SHORT).show();
+
+            case R.id.menuitem_setup:
+                Intent launchNewIntent = new Intent(MainActivity.this,SetupActivity.class);
+                startActivityForResult(launchNewIntent, 0);
                 return true;
 
             case R.id.menuitem_quit:

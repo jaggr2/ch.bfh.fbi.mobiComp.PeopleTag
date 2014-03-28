@@ -9,5 +9,9 @@
     <string name="ui_menu_send">send</string>
     <string name="ui_menu_add">add</string>
     <string name="ui_menu_quit">quit</string>
+    <string name="ui_menu_setup">Setup</string>
     <string name="search_people_fragment">Search People Fragment</string>
+
+    <!-- setup Strings -->
+    <string name="ui_setup_noname">ERROR: Please enter your name</string>
 </resources>
