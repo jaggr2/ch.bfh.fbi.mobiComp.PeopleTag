@@ -53,14 +53,14 @@ public class UserDataAdapter extends ArrayAdapter<UserData> {
 
             if (tvLocation != null) {
                 //TODO Lan hier müsste die Current Location sein (momentan dummy)
-               //Location loc =  ((MainActivity) mContext).getGeoTracker().getLocation();
+               Location loc =  ((MainActivity) mContext).getActualLocation();
 
-//                if(loc!=null){
-//                    tvDistance.setText("Distance: " + Double.toString(data.getDistanceToUserLocation(loc)) +"m");
-//                }
-//                else{
-//                    tvDistance.setText("NoGeoPositionFound");
-//                }
+                if(loc!=null){
+                    tvDistance.setText("Distance: " + Double.toString(data.getDistanceToUserLocation(loc)) +"m");
+                }
+                else{
+                    tvDistance.setText("NoGeoPositionFound");
+                }
             }
 			
 		}

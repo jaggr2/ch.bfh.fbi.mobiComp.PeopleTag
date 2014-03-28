@@ -16,8 +16,6 @@ import ch.bfh.fbi.mobiComp.PeopleTag.gui.MainActivity;
 
 public class GeoTracker extends Service implements LocationListener {
 
-    private final Context mContext;
-
     // flag for GPS status
     boolean isGPSEnabled = false;
 
@@ -40,14 +38,21 @@ public class GeoTracker extends Service implements LocationListener {
     // Declaring a Location Manager
     protected LocationManager locationManager;
 
-    public GeoTracker(Context context) {
-        this.mContext = context;
-        getLocation();
+    public GeoTracker()
+    {
+        super();
     }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        getLocation();
+        return super.onStartCommand(intent, flags, startId);
+    }
+
 
     public Location getLocation() {
         try {
-            locationManager = (LocationManager) mContext
+            locationManager = (LocationManager) getApplicationContext()
                     .getSystemService(LOCATION_SERVICE);
 
             // getting GPS status
@@ -75,6 +80,7 @@ public class GeoTracker extends Service implements LocationListener {
                         if (location != null) {
                             latitude = location.getLatitude();
                             longitude = location.getLongitude();
+                            updateLocationOnMain(location);
                         }
                     }
                 }
@@ -92,6 +98,7 @@ public class GeoTracker extends Service implements LocationListener {
                             if (location != null) {
                                 latitude = location.getLatitude();
                                 longitude = location.getLongitude();
+                                updateLocationOnMain(location);
                             }
                         }
                     }
@@ -152,7 +159,7 @@ public class GeoTracker extends Service implements LocationListener {
      * On pressing Settings button will lauch Settings Options
      * */
     public void showSettingsAlert(){
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getApplicationContext());
 
         // Setting Dialog Title
         alertDialog.setTitle("GPS is settings");
@@ -164,7 +171,7 @@ public class GeoTracker extends Service implements LocationListener {
         alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog,int which) {
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                mContext.startActivity(intent);
+                getApplicationContext().startActivity(intent);
             }
         });
 
@@ -179,12 +186,17 @@ public class GeoTracker extends Service implements LocationListener {
         alertDialog.show();
     }
 
-    @Override
-    public void onLocationChanged(Location location)
+    private void updateLocationOnMain (Location location)
     {
         Intent IntentLocationUpdate = new Intent(MainActivity.LOCATION_UPDATE);
         IntentLocationUpdate.putExtra("location",location);
         getApplicationContext().sendBroadcast(IntentLocationUpdate);
+    }
+
+    @Override
+    public void onLocationChanged(Location location)
+    {
+        updateLocationOnMain(location);
     }
 
     @Override
