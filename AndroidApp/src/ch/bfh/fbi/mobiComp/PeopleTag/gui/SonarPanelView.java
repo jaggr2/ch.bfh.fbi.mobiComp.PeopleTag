@@ -27,7 +27,8 @@ public class SonarPanelView extends View {
     @Override
     public void onDraw(Canvas canvas) {
         drawSonarBackground(canvas);
-
+        drawTargetLines(canvas);
+        drawUserPosition(canvas);
     }
 
     private void drawSonarBackground(Canvas canvas) {
@@ -47,4 +48,18 @@ public class SonarPanelView extends View {
         paint.setColor(Color.GREEN);
         canvas.drawCircle(170,170,30,paint);
     }
+
+    private void drawTargetLines(Canvas canvas) {
+        paint.setColor(Color.GREEN);
+        paint.setStrokeWidth(10);
+        canvas.drawLine(170,340,170,0,paint);
+        canvas.drawLine(0,170,340,170,paint);
+    }
+
+    private void drawUserPosition(Canvas canvas) {
+        paint.setColor(Color.RED);
+        paint.setStrokeWidth(12);
+        canvas.drawPoint(30,70, paint);
+    }
+
 }
