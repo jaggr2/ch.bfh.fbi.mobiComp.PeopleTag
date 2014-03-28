@@ -72,7 +72,6 @@ public class MainActivity extends Activity {
         //}
     }
 
-
     // Should only used to force a location Update...
     public void registerPosition()
     {

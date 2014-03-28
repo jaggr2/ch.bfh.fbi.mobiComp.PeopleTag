@@ -34,9 +34,9 @@ exports.adduser = function(db) {
         req.body.positionReportedAt = new Date();
         req.body.createdAt = new Date();
         req.body.updatedAt = new Date();
-        db.collection('userlist').insert(req.body, function(err, result){
+        db.collection('userlist').insert(req.body, function(err, records){
             res.send(
-                (err === null) ? { msg: '' } : { msg: err }
+                (err === null) ? records[0] : { msg: err }
             );
         });
     }
