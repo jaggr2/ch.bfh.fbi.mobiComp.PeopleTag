@@ -13,15 +13,17 @@ public class UserData {
     String displayName;
     double latitude;
     double longitude;
+    String timeStamp;
 
 
 
-    public UserData(String id, String displayName, double latitude, double longitude)
+    public UserData(String id, String displayName, double latitude, double longitude, String timeStamp)
     {
         this.id = id;
         this.displayName = displayName;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.timeStamp = timeStamp;
 
     }
 
@@ -39,6 +41,9 @@ public class UserData {
 
     public double getLongitude() {
         return longitude;
+    }
+    public String getTimeStamp() {
+        return timeStamp;
     }
 
     /**

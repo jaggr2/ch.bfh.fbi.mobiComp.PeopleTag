@@ -119,7 +119,8 @@ public abstract class UserUpdateTask extends AsyncTask<String, Integer, UserData
                 return new UserData(rootJsonObject.get("_id").toString(),
                         rootJsonObject.get("displayName").toString(),
                         rootJsonObject.getDouble("currentLatitude"),
-                        rootJsonObject.getDouble("currentLongitude"));
+                        rootJsonObject.getDouble("currentLongitude"),
+                        rootJsonObject.getString("updatedAt"));
             } else if (rootJsonObject.has("msg")) {
 
                 if (rootJsonObject.getLong("msg") == 0) {
@@ -139,7 +140,7 @@ public abstract class UserUpdateTask extends AsyncTask<String, Integer, UserData
                     }
                 }
 
-                return new UserData(userID, displayName, (location != null ? location.getLongitude() : 0), (location != null ? location.getLatitude() : 0));
+                return new UserData(userID, displayName, (location != null ? location.getLongitude() : 0), (location != null ? location.getLatitude() : 0), "");
             }
         } catch (JSONException e) {
             Log.e(TAG, "JSON Exception", e);

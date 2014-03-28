@@ -57,7 +57,7 @@ public class UserDataAdapter extends ArrayAdapter<UserData> {
                Location loc =  ((MainActivity) mContext).getActualLocation();
 
                 if(loc!=null){
-                    tvDistance.setText("Distance: " + readableDistance(data.getDistanceToUserLocation(loc)));
+                    tvDistance.setText("Distance: " + readableDistance(data.getDistanceToUserLocation(loc)) + "\nRegisterd at: " + data.getTimeStamp());
                 }
                 else{
                     tvDistance.setText("NoGeoPositionFound");

@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.location.Location;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,6 +22,7 @@ public class MainActivity extends Activity {
 
     public final static String LOCATION_UPDATE = "LocationUpdate";
     private Location actualLoc = null;
+    private Handler handler = new Handler();
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent)
@@ -41,6 +43,14 @@ public class MainActivity extends Activity {
                 stopService(serviceIntent);
                 startService(serviceIntent);
             }
+        }
+    };
+
+    private Runnable serverUpdate = new Runnable() {
+        @Override
+        public void run() {
+            new UserInfoDownloader(MainActivity.getInstance()).execute();
+            handler.postDelayed(serverUpdate, 30 * 1000);
         }
     };
 
@@ -83,6 +93,8 @@ public class MainActivity extends Activity {
         //gps = new GeoTracker(MainActivity.this);
         startService(new Intent(this, GeoTracker.class));
 
+
+        handler.postDelayed(serverUpdate, 30 * 1000);
         //if(!gps.canGetLocation()){
         //    gps.showSettingsAlert();
         //}
@@ -101,12 +113,14 @@ public class MainActivity extends Activity {
         IntentFilter updateRecive = new IntentFilter();
         updateRecive.addAction(LOCATION_UPDATE);
         registerReceiver(receiver, updateRecive);
+        handler.postDelayed(serverUpdate, 30 * 1000);
         super.onResume();
     }
 
     @Override
     protected void onPause() {
         unregisterReceiver(receiver);
+        handler.removeCallbacks(serverUpdate);
         super.onPause();
     }
 

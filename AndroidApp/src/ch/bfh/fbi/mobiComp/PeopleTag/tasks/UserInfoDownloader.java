@@ -94,7 +94,8 @@ public class UserInfoDownloader extends AsyncTask<String, Void, Boolean> {
     	            					JSONsessionObject.get("_id").toString(),
     	            					JSONsessionObject.get("displayName").toString(),
                                         JSONsessionObject.getDouble("currentLatitude"),
-                                        JSONsessionObject.getDouble("currentLongitude"));
+                                        JSONsessionObject.getDouble("currentLongitude"),
+                                        JSONsessionObject.getString("updatedAt"));
     				datas.add(data);
     			} // for (int i = 0; i < JSONsessionArray.length(); i++)
     			querySuccessful = true;
