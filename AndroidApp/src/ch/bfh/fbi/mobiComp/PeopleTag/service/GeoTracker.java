@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
+import ch.bfh.fbi.mobiComp.PeopleTag.gui.MainActivity;
 
 public class GeoTracker extends Service implements LocationListener {
 
@@ -179,7 +180,11 @@ public class GeoTracker extends Service implements LocationListener {
     }
 
     @Override
-    public void onLocationChanged(Location location) {
+    public void onLocationChanged(Location location)
+    {
+        Intent IntentLocationUpdate = new Intent(MainActivity.LOCATION_UPDATE);
+        IntentLocationUpdate.putExtra("location",location);
+        getApplicationContext().sendBroadcast(IntentLocationUpdate);
     }
 
     @Override
