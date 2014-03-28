@@ -66,12 +66,16 @@ public abstract class UserUpdateTask extends AsyncTask<String, Integer, UserData
 
     @Override
     protected UserData doInBackground(String... Params) { // this method runs in dedicated non-UI thread
+        return SendPost(0);
+    }
 
-        Boolean querySuccessful = false;
+    private UserData SendPost(Integer recursionCount) {
 
         String jsonResponse = null;
 
-        String url = (this.userID != null && this.userID.length() > 0 ? "http://peopletag.xrj.ch/users/" + this.userID : "http://peopletag.xrj.ch/users");
+        String baseURL = "http://peopletag.xrj.ch";
+
+        String url = (this.userID != null && this.userID.length() > 0 ? baseURL + "/users/" + this.userID : baseURL + "/users");
 
 
         String longitude = (location != null ? String.valueOf(location.getLongitude()) : "null");
@@ -91,7 +95,6 @@ public abstract class UserUpdateTask extends AsyncTask<String, Integer, UserData
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                 jsonResponse = EntityUtils.toString(response.getEntity());
                 Log.d(TAG, "POST " + url + " returned Code " + response.getStatusLine().getStatusCode() + " with Content: " + jsonResponse);
-                querySuccessful = true;
             } else {
                 Log.e(TAG, "POST " + url + " returned Code " + response.getStatusLine().getStatusCode() + " with Error-Content: " + response.getEntity());
             }
@@ -101,7 +104,7 @@ public abstract class UserUpdateTask extends AsyncTask<String, Integer, UserData
 
         this.publishProgress(50);
 
-        if (jsonResponse == null || !querySuccessful) {
+        if (jsonResponse == null) {
             return null;
         }
 
@@ -122,6 +125,25 @@ public abstract class UserUpdateTask extends AsyncTask<String, Integer, UserData
                         rootJsonObject.getDouble("currentLongitude"));
             }
             else if (rootJsonObject.has("msg")) {
+
+                if(rootJsonObject.getLong("msg") == 0) {
+                   Log.e(TAG, "UserID does not exists on Server, try reregister it");
+                   userID = null;
+                   if( recursionCount < 3) {
+
+                       try {
+                           Thread.sleep((long)Math.pow(2, recursionCount) * 1000);
+                       } catch (InterruptedException e) {
+                           Thread.interrupted();
+                       }
+
+                       return SendPost(recursionCount + 1);
+                   }
+                   else {
+                       return null;
+                   }
+                }
+
                 return new UserData(userID, displayName, (location != null ? location.getLongitude() : null), (location != null ? location.getLatitude() : null));
             }
 
@@ -130,6 +152,5 @@ public abstract class UserUpdateTask extends AsyncTask<String, Integer, UserData
         }
         return null;
     }
-
 }
 
