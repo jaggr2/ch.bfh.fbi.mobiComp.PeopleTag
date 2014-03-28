@@ -38,6 +38,19 @@ public class SetupActivity extends Activity {
             TextView textViewTitle = (TextView) findViewById(R.id.textViewTitle);
             textViewTitle.setText("ID" + id);
         }
+
+        TextView viewLatitude = (TextView) findViewById(R.id.textViewLatitudeValue);
+        TextView viewLongitude = (TextView) findViewById(R.id.textViewLongitudeValue);
+
+        MainActivity mainActivity = MainActivity.getInstance();
+
+        Location loc = (mainActivity.getActualLocation() != null ? mainActivity.getActualLocation() : null);
+
+        if (loc != null)
+        {
+            viewLongitude.setText(Double.toString(loc.getLongitude()));
+            viewLatitude.setText(Double.toString(loc.getLatitude()));
+        }
     }
 
     public void registerUser(View view) {
