@@ -4,10 +4,13 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.location.Location;
 import android.util.AttributeSet;
 import android.view.View;
 import ch.bfh.fbi.mobiComp.PeopleTag.model.UserData;
+
+import static java.lang.Math.*;
 
 /**
  * Created by heroku on 28.03.14.
@@ -65,12 +68,52 @@ public class SonarPanelView extends View {
 
     // Draw userposition if distanceToUser is in range..
     private void drawUserPosition(Canvas canvas, UserData userLoc, Location currentLocation, int resolutionInMeter) {
-       if(userLoc != null && userLoc.getDistanceToUserLocation(currentLocation) < resolutionInMeter) {
+      // if(userLoc != null && userLoc.getDistanceToUserLocation(currentLocation) < resolutionInMeter) {
             // userLoc.getAngleFromCurrentLocationToUserLoaction();
+
+           // float distanceFromCenter = radius/1000 * userLoc.getDistanceToUserLocation(currentLocation);
+        //    double angle = userLoc.getAngleFromCurrentLocationToUserLoaction(currentLocation);
+
+        // Demodaten
+            float distanceFromCenter = radius/100*70;
+            double angle = 30;
+
+           Point user = getPosition(angle,distanceFromCenter);
+
             paint.setColor(Color.RED);
             paint.setStrokeWidth(6 * SCALE_FACTOR);
-            canvas.drawPoint((30 * SCALE_FACTOR), (70 * SCALE_FACTOR), paint);
+            canvas.drawPoint((radius+user.x), (radius+user.y), paint);
+        //}
+    }
+
+    public Point getPosition(double angle, float distance)
+    {
+        double radians = Math.toRadians(angle);
+
+        System.out.println(radians);
+
+        int x = (int) radians * (int) distance;
+        int y = (int) radians * (int) distance;
+
+        System.out.println(x);
+        System.out.println(y);
+
+        if(radians < (Math.PI/2)) {
+            return new Point(x,y);
         }
+
+        else if(radians > (Math.PI/2) && radians < (Math.PI)) {
+            return new Point(x,-y);
+        }
+
+        else if(radians > (Math.PI) && radians < (Math.PI+(Math.PI/2))) {
+            return new Point(-x,y);
+        }
+
+        else {
+            return new Point(-x,-y);
+        }
+
     }
 
 }
