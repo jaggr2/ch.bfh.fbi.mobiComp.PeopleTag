@@ -113,7 +113,6 @@ public class UserInfoDownloader extends AsyncTask<String, Void, Boolean> {
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                        System.out.println("Tests");
                         UserData o = (UserData) listView.getItemAtPosition(position);
                         Intent intent = new Intent(mHostActivity, SonarPanelActivity.class);
                         intent.putExtra("user", o.getDisplayName());
