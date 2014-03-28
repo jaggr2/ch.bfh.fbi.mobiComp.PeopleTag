@@ -114,6 +114,10 @@ public class MainActivity extends Activity {
             case R.id.menuitem_add:
                 Toast.makeText(this, getString(R.string.ui_menu_add),
                         Toast.LENGTH_SHORT).show();
+
+            case R.id.menuitem_setup:
+                Intent launchNewIntent = new Intent(MainActivity.this,SetupActivity.class);
+                startActivityForResult(launchNewIntent, 0);
                 return true;
 
             case R.id.menuitem_quit:
