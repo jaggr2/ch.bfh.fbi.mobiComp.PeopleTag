@@ -1,18 +1,13 @@
 package ch.bfh.fbi.mobiComp.PeopleTag.gui;
 
 import android.app.Activity;
-import android.app.FragmentTransaction;
-import android.app.ListActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.text.style.UpdateAppearance;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -36,11 +31,13 @@ public class MainActivity extends Activity {
                 actualLoc = intent.getParcelableExtra("location");
                 final ListView listView = (ListView) findViewById(R.id.user_list);
 
+                listView.invalidate();
+
                 Toast.makeText(context, actualLoc.toString(),
                         Toast.LENGTH_SHORT).show();
             }
         }
-    };;
+    };
 
     MediaPlayer mySound;
     GeoTracker gps;
@@ -93,6 +90,19 @@ public class MainActivity extends Activity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        IntentFilter updateRecive = new IntentFilter();
+        updateRecive.addAction(LOCATION_UPDATE);
+        registerReceiver(receiver, updateRecive);
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        unregisterReceiver(receiver);
+        super.onPause();
+    }
 
     @Override
     protected void onDestroy() {
@@ -111,28 +121,17 @@ public class MainActivity extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menuitem_search:
-                //PeopleSearchListFragment peopleSearchFragment = new PeopleSearchListFragment();//(PeopleSearch) getFragmentManager().findFragmentById(R.id.people_search_fragment);
-
-                if(!mySound.isPlaying()) {
-                    mySound.start();
-                }
-                
-//                FragmentTransaction ft = getFragmentManager().beginTransaction();
-//                ft.replace(R.id.fragment_container, peopleSearchFragment);
-//                // standard transition animation
-//                ft.setTransition(FragmentTransaction.
-//                        TRANSIT_FRAGMENT_FADE);
-//                // enable reverting the Fragment change via the back button
-//                ft.addToBackStack(null); // conserve previous old details fragment
-//                ft.commit(); // schedule transaction
-                return true;
-            case R.id.menuitem_send:
-                registerPosition();
-                return true;
-            case R.id.menuitem_add:
-                Toast.makeText(this, getString(R.string.ui_menu_add),
-                        Toast.LENGTH_SHORT).show();
+//            case R.id.menuitem_search:
+//                if(!mySound.isPlaying()) {
+//                    mySound.start();
+//                }
+//                return true;
+//            case R.id.menuitem_send:
+//                registerPosition();
+//                return true;
+//            case R.id.menuitem_add:
+//                Toast.makeText(this, getString(R.string.ui_menu_add),
+//                        Toast.LENGTH_SHORT).show();
 
             case R.id.menuitem_setup:
                 Intent launchNewIntent = new Intent(MainActivity.this,SetupActivity.class);
@@ -147,11 +146,6 @@ public class MainActivity extends Activity {
                 return true;
         }
         return false;
-    }
-
-    public GeoTracker getGeoTracker()
-    {
-        return this.gps;
     }
 
     public Location getActualLocation()
