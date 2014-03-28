@@ -3,6 +3,7 @@ package ch.bfh.fbi.mobiComp.PeopleTag.gui;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.MediaPlayer;
@@ -12,13 +13,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 import ch.bfh.fbi.mobiComp.PeopleTag.R;
-import ch.bfh.fbi.mobiComp.PeopleTag.listener.GeoPositionListener;
+import ch.bfh.fbi.mobiComp.PeopleTag.service.GeoTracker;
 import ch.bfh.fbi.mobiComp.PeopleTag.tasks.UserInfoDownloader;
 
 public class MainActivity extends Activity {
     /**
      * Called when the activity is first created.
      */
+
+    GeoTracker gps;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,12 +37,10 @@ public class MainActivity extends Activity {
 
 
         // Current Location should be update everytime...
-        LocationManager locationManager = (LocationManager)
-                getSystemService(Context.LOCATION_SERVICE);
-
-        LocationListener locationListener = new GeoPositionListener();
-        locationManager.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
+        gps = new GeoTracker(MainActivity.this);
+        if(!gps.canGetLocation()){
+            gps.showSettingsAlert();
+        }
     }
 
 
@@ -92,6 +94,10 @@ public class MainActivity extends Activity {
                 return true;
         }
         return false;
+    }
+
+    public GeoTracker getGeoTracker(){
+        return this.gps;
     }
 
 }
