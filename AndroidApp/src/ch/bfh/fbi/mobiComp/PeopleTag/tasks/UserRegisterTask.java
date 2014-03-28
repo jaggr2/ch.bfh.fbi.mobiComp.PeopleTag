@@ -1,37 +1,26 @@
 package ch.bfh.fbi.mobiComp.PeopleTag.tasks;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.Toast;
 import ch.bfh.fbi.mobiComp.PeopleTag.R;
 import ch.bfh.fbi.mobiComp.PeopleTag.gui.SetupActivity;
-import ch.bfh.fbi.mobiComp.PeopleTag.gui.SonarPanelActivity;
-import ch.bfh.fbi.mobiComp.PeopleTag.gui.UserDataAdapter;
 import ch.bfh.fbi.mobiComp.PeopleTag.model.UserData;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 
 public class UserRegisterTask extends AsyncTask<String, Void, Boolean> {
 
