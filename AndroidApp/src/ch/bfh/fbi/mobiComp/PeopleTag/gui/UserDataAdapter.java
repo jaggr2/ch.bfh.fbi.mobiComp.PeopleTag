@@ -12,6 +12,7 @@ import android.widget.TextView;
 import ch.bfh.fbi.mobiComp.PeopleTag.R;
 import ch.bfh.fbi.mobiComp.PeopleTag.model.UserData;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /*
@@ -56,7 +57,7 @@ public class UserDataAdapter extends ArrayAdapter<UserData> {
                Location loc =  ((MainActivity) mContext).getActualLocation();
 
                 if(loc!=null){
-                    tvDistance.setText("Distance: " + Double.toString(data.getDistanceToUserLocation(loc)) +"m");
+                    tvDistance.setText("Distance: " + readableDistance(data.getDistanceToUserLocation(loc)));
                 }
                 else{
                     tvDistance.setText("NoGeoPositionFound");
@@ -66,4 +67,15 @@ public class UserDataAdapter extends ArrayAdapter<UserData> {
 		}
 		return v;
 	}
+
+    public static String readableDistance(double distanceInMeters) {
+
+
+        if(distanceInMeters <= 0) return "0";
+        distanceInMeters *= 1000; // convert to mm
+
+        final String[] units = new String[] { "mm", "m", "Km", "Mm", "Gm", "Tm" };
+        int digitGroups = (int) (Math.log10(distanceInMeters)/Math.log10(1000));
+        return new DecimalFormat("#,##0.#").format(distanceInMeters/Math.pow(1000, digitGroups)) + " " + units[digitGroups];
+    }
 }
