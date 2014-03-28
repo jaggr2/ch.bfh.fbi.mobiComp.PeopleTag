@@ -20,7 +20,6 @@ import ch.bfh.fbi.mobiComp.PeopleTag.tasks.UserInfoDownloader;
 public class MainActivity extends Activity {
 
     public final static String LOCATION_UPDATE = "LocationUpdate";
-    private UserInfoDownloader userInfoDownloader = new UserInfoDownloader(this);
     private Location actualLoc = null;
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -73,6 +72,7 @@ public class MainActivity extends Activity {
         // but it would be the best Solution when our position changes we need to be sure
         // the others are at the current locations to display valid data...
         // Sure the app should have a refresh button to updates myLocation and the friendslocation...
+        UserInfoDownloader userInfoDownloader = new UserInfoDownloader(this);
         userInfoDownloader.execute();
 
         IntentFilter updateRecive = new IntentFilter();
@@ -127,11 +127,15 @@ public class MainActivity extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-//            case R.id.menuitem_search:
+            case R.id.menuitem_search:
 //                if(!mySound.isPlaying()) {
 //                    mySound.start();
 //                }
-//                return true;
+
+                  UserInfoDownloader userInfoDownloader = new UserInfoDownloader(this);
+                  userInfoDownloader.execute();
+
+                  return true;
 //            case R.id.menuitem_send:
 //                registerPosition();
 //                return true;
