@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import ch.bfh.fbi.mobiComp.PeopleTag.R;
+import ch.bfh.fbi.mobiComp.PeopleTag.gui.MainActivity;
 import ch.bfh.fbi.mobiComp.PeopleTag.gui.SonarPanelActivity;
 import ch.bfh.fbi.mobiComp.PeopleTag.gui.UserDataAdapter;
 import ch.bfh.fbi.mobiComp.PeopleTag.model.UserData;
@@ -106,22 +107,29 @@ public class UserInfoDownloader extends AsyncTask<String, Void, Boolean> {
         @Override
         protected void onPostExecute(Boolean querySuccessful) {
         	if (querySuccessful) {
-        	    // display the tweets in a listView
-                final ListView listView = (ListView) mHostActivity.findViewById(R.id.user_list);
-                listView.setAdapter(new UserDataAdapter(mHostActivity, R.layout.listitem, datas));
-                listView.setClickable(true);
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                        UserData o = (UserData) listView.getItemAtPosition(position);
-                        Intent intent = new Intent(mHostActivity, SonarPanelActivity.class);
-                        intent.putExtra("user", o.getDisplayName());
-                        mHostActivity.startActivity(intent);
-                    }
-                });
-        	} else {
-        		// optionally handle the unsuccessful query
-        	}
+                if (mHostActivity instanceof MainActivity)
+                {
+                    //Update List in MainActivity
+                    final ListView listView = (ListView) mHostActivity.findViewById(R.id.user_list);
+                    listView.setAdapter(new UserDataAdapter(mHostActivity, R.layout.listitem, datas));
+                    listView.setClickable(true);
+                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+                            UserData o = (UserData) listView.getItemAtPosition(position);
+                            Intent intent = new Intent(mHostActivity, SonarPanelActivity.class);
+                            intent.putExtra("user", o.getDisplayName());
+                            mHostActivity.startActivity(intent);
+                        }
+                    });
+                }
+                else if (mHostActivity instanceof SonarPanelActivity)
+                {
+
+                }
+            } else {
+                // optionally handle the unsuccessful query
+            }
         }
 
         @Override

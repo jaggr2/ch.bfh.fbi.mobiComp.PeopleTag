@@ -111,17 +111,17 @@ public class MainActivity extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menuitem_search:
-                if(!mySound.isPlaying()) {
-                    mySound.start();
-                }
-                return true;
-            case R.id.menuitem_send:
-                registerPosition();
-                return true;
-            case R.id.menuitem_add:
-                Toast.makeText(this, getString(R.string.ui_menu_add),
-                        Toast.LENGTH_SHORT).show();
+//            case R.id.menuitem_search:
+//                if(!mySound.isPlaying()) {
+//                    mySound.start();
+//                }
+//                return true;
+//            case R.id.menuitem_send:
+//                registerPosition();
+//                return true;
+//            case R.id.menuitem_add:
+//                Toast.makeText(this, getString(R.string.ui_menu_add),
+//                        Toast.LENGTH_SHORT).show();
 
             case R.id.menuitem_setup:
                 Intent launchNewIntent = new Intent(MainActivity.this,SetupActivity.class);
