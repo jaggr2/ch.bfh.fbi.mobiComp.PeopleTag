@@ -4,8 +4,10 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.location.Location;
 import android.util.AttributeSet;
 import android.view.View;
+import ch.bfh.fbi.mobiComp.PeopleTag.model.UserData;
 
 /**
  * Created by heroku on 28.03.14.
@@ -24,42 +26,51 @@ public class SonarPanelView extends View {
         super(context, attrs, defStyle);
     }
 
+    private static int SCALE_FACTOR = 3;
+    private int midPos = 170*SCALE_FACTOR;
+    private int radius = 150*SCALE_FACTOR;
+    private int SPACER_LARGE = 30*SCALE_FACTOR;
+    private int SPACER_SMALL = 10*SCALE_FACTOR;
     @Override
     public void onDraw(Canvas canvas) {
         drawSonarBackground(canvas);
         drawTargetLines(canvas);
-        drawUserPosition(canvas);
+        drawUserPosition(canvas, null, null, 1111111111);
     }
 
     private void drawSonarBackground(Canvas canvas) {
         paint.setColor(Color.GREEN);
         paint.setStrokeWidth(3);
-        canvas.drawCircle(170,170,150,paint);
+        canvas.drawCircle(midPos, midPos, radius, paint);
         paint.setColor(Color.BLACK);
-        canvas.drawCircle(170,170,140,paint);
+        canvas.drawCircle(midPos, midPos, (radius-SPACER_SMALL), paint);
         paint.setColor(Color.GREEN);
-        canvas.drawCircle(170,170,110,paint);
+        canvas.drawCircle(midPos, midPos, (radius-(SPACER_SMALL+SPACER_LARGE)), paint);
         paint.setColor(Color.BLACK);
-        canvas.drawCircle(170,170,100,paint);
+        canvas.drawCircle(midPos, midPos, (radius-((2*SPACER_SMALL)+(SPACER_LARGE))), paint);
         paint.setColor(Color.GREEN);
-        canvas.drawCircle(170,170,70,paint);
+        canvas.drawCircle(midPos, midPos, (radius-((2*SPACER_SMALL)+(2*SPACER_LARGE))), paint);
         paint.setColor(Color.BLACK);
-        canvas.drawCircle(170,170,60,paint);
+        canvas.drawCircle(midPos, midPos, (radius-((3*SPACER_SMALL)+(2*SPACER_LARGE))), paint);
         paint.setColor(Color.GREEN);
-        canvas.drawCircle(170,170,30,paint);
+        canvas.drawCircle(midPos,midPos, (radius-((3*SPACER_SMALL)+(3*SPACER_LARGE))),paint);
     }
 
     private void drawTargetLines(Canvas canvas) {
         paint.setColor(Color.GREEN);
-        paint.setStrokeWidth(10);
-        canvas.drawLine(170,340,170,0,paint);
-        canvas.drawLine(0,170,340,170,paint);
+        paint.setStrokeWidth(20);
+        canvas.drawLine(midPos,(2*midPos),midPos,0,paint);
+        canvas.drawLine(0,midPos,(2*midPos),midPos,paint);
     }
 
-    private void drawUserPosition(Canvas canvas) {
-        paint.setColor(Color.RED);
-        paint.setStrokeWidth(12);
-        canvas.drawPoint(30,70, paint);
+    // Draw userposition if distanceToUser is in range..
+    private void drawUserPosition(Canvas canvas, UserData userLoc, Location currentLocation, int resolutionInMeter) {
+       if(userLoc != null && userLoc.getDistanceToUserLocation(currentLocation) < resolutionInMeter) {
+            // userLoc.getAngleFromCurrentLocationToUserLoaction();
+            paint.setColor(Color.RED);
+            paint.setStrokeWidth(6 * SCALE_FACTOR);
+            canvas.drawPoint((30 * SCALE_FACTOR), (70 * SCALE_FACTOR), paint);
+        }
     }
 
 }
