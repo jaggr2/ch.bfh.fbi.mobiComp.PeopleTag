@@ -18,16 +18,25 @@
                 android:id="@+id/textViewTitle"
                 android:textAlignment="center"
                 android:paddingTop="20dp"
-                android:height="100dp"
+                android:height="100dp" />
+
+        <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Your ID: none"
+                android:id="@+id/textViewSubTitle"
+                android:textAlignment="center"
+
                 android:onClick="@string/registerPosition"/>
 
         <TextView
                 android:layout_width="fill_parent"
-                android:layout_height="60dp"
+                android:layout_height="50dp"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Enter your Name:"
+                android:text="Your Name:"
                 android:id="@+id/textViewEnterName"
-                android:paddingTop="30dp"/>
+                android:paddingTop="20dp"/>
 
         <EditText
                 android:layout_width="match_parent"
@@ -60,7 +69,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:text="Longitude: "
+                        android:text="Longitude:    "
                         android:id="@+id/textViewLongitudeText"/>
 
                 <TextView
@@ -102,15 +111,36 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:text="Precision: "
-                        android:id="@+id/textViewPrecisionText"/>
+                        android:text="Accuracy: "
+                        android:id="@+id/textViewAccuracyText"/>
 
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:text="unknown"
-                        android:id="@+id/textViewPrecisionValue"/>
+                        android:id="@+id/textViewAccuracyValue"/>
+            </TableRow>
+
+            <TableRow
+                    android:id="@+id/tableRow4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dip" >
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="Provider: "
+                        android:id="@+id/textViewProviderText"/>
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="unknown"
+                        android:id="@+id/textViewProviderValue"/>
             </TableRow>
         </TableLayout>
 
@@ -121,6 +151,10 @@
                 android:id="@+id/button2"
                 android:layout_gravity="center_horizontal"
                 />
+        <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/progressBarSetup" android:layout_gravity="center_horizontal"/>
     </LinearLayout>
 </LinearLayout>
 
