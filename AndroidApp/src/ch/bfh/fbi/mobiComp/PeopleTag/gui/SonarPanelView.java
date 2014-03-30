@@ -8,6 +8,7 @@ import android.graphics.Point;
 import android.location.Location;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.Toast;
 import ch.bfh.fbi.mobiComp.PeopleTag.model.UserData;
 
 import static java.lang.Math.*;
@@ -17,6 +18,9 @@ import static java.lang.Math.*;
  */
 public class SonarPanelView extends View {
     Paint paint = new Paint();
+
+    private Location current;
+    private UserData userLocation;
 
     public SonarPanelView(Context context) {
         super(context);
@@ -38,7 +42,7 @@ public class SonarPanelView extends View {
     public void onDraw(Canvas canvas) {
         drawSonarBackground(canvas);
         drawTargetLines(canvas);
-        drawUserPosition(canvas, null, null, 1111111111);
+        drawUserPosition(canvas, 1111111111);
     }
 
     private void drawSonarBackground(Canvas canvas) {
@@ -67,23 +71,23 @@ public class SonarPanelView extends View {
     }
 
     // Draw userposition if distanceToUser is in range..
-    private void drawUserPosition(Canvas canvas, UserData userLoc, Location currentLocation, int resolutionInMeter) {
-      // if(userLoc != null && userLoc.getDistanceToUserLocation(currentLocation) < resolutionInMeter) {
+    private void drawUserPosition(Canvas canvas, int resolutionInMeter) {
+       if(userLocation != null && userLocation.getDistanceToUserLocation(current) < resolutionInMeter) {
             // userLoc.getAngleFromCurrentLocationToUserLoaction();
 
-           // float distanceFromCenter = radius/1000 * userLoc.getDistanceToUserLocation(currentLocation);
-        //    double angle = userLoc.getAngleFromCurrentLocationToUserLoaction(currentLocation);
+           float distanceFromCenter = radius/1000 * userLocation.getDistanceToUserLocation(current);
+            double angle = userLocation.getAngleFromCurrentLocationToUserLoaction(current);
 
         // Demodaten
-            float distanceFromCenter = radius/100*70;
-            double angle = 30;
+          //  float distanceFromCenter = radius/100*70;
+         //   double angle = 30;
 
            Point user = getPosition(angle,distanceFromCenter);
 
             paint.setColor(Color.RED);
             paint.setStrokeWidth(6 * SCALE_FACTOR);
             canvas.drawPoint((radius+user.x), (radius+user.y), paint);
-        //}
+        }
     }
 
     public Point getPosition(double angle, float distance)
@@ -114,6 +118,12 @@ public class SonarPanelView extends View {
             return new Point(-x,-y);
         }
 
+    }
+
+    public void refreshUserLocation(Location current, UserData userLocation){
+        this.userLocation = userLocation;
+        this.current = current;
+        this.invalidate();
     }
 
 }

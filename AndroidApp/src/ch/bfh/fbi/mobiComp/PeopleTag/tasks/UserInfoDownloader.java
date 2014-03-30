@@ -126,7 +126,14 @@ public class UserInfoDownloader extends AsyncTask<String, Void, Boolean> {
                 }
                 else if (mHostActivity instanceof SonarPanelActivity)
                 {
+                    UserData correctUser = null;
+                    for(UserData data : datas){
+                        if(data.getId().equalsIgnoreCase(((SonarPanelActivity) mHostActivity).getUserid())){
+                            correctUser = data;
+                        }
+                    }
 
+                    ((SonarPanelActivity) mHostActivity).refresh(correctUser);
                 }
             } else {
                 // optionally handle the unsuccessful query
