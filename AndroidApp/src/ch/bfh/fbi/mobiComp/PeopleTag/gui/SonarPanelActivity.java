@@ -96,6 +96,7 @@ public class SonarPanelActivity extends Activity implements View.OnClickListener
         // Get initial Location....
         GeoTracker geoTracker = new GeoTracker();
         currentLocation = geoTracker.getLocation();
+        sonarView.setCurrent(currentLocation);
 
         handler.postDelayed(serverUpdate, 30 * 1000);
 
@@ -111,6 +112,9 @@ public class SonarPanelActivity extends Activity implements View.OnClickListener
             userId= (String) savedInstanceState.getSerializable("user");
         }
         this.userid = userId;
+
+        UserInfoDownloader userInfoDownloader = new UserInfoDownloader(this);
+        userInfoDownloader.execute();
     }
 
     @Override

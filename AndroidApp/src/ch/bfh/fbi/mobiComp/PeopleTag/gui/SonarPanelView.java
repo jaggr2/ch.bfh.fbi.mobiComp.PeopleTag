@@ -72,7 +72,7 @@ public class SonarPanelView extends View {
 
     // Draw userposition if distanceToUser is in range..
     private void drawUserPosition(Canvas canvas, int resolutionInMeter) {
-       if(userLocation != null && userLocation.getDistanceToUserLocation(current) < resolutionInMeter) {
+       if(userLocation != null && current != null && userLocation.getDistanceToUserLocation(current) < resolutionInMeter) {
             // userLoc.getAngleFromCurrentLocationToUserLoaction();
 
            float distanceFromCenter = radius/1000 * userLocation.getDistanceToUserLocation(current);
@@ -124,6 +124,10 @@ public class SonarPanelView extends View {
         this.userLocation = userLocation;
         this.current = current;
         this.invalidate();
+    }
+
+    public void setCurrent(Location current){
+        this.current = current;
     }
 
 }

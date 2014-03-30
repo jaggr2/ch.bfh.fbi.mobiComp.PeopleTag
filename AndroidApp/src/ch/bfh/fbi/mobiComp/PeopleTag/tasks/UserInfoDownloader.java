@@ -128,11 +128,12 @@ public class UserInfoDownloader extends AsyncTask<String, Void, Boolean> {
                 {
                     UserData correctUser = null;
                     for(UserData data : datas){
-                        if(data.getId().equalsIgnoreCase(((SonarPanelActivity) mHostActivity).getUserid())){
+                        if(data.getDisplayName().equalsIgnoreCase(((SonarPanelActivity) mHostActivity).getUserid())){
                             correctUser = data;
                         }
                     }
 
+                    ((SonarPanelActivity) mHostActivity).setLastUserData(correctUser);
                     ((SonarPanelActivity) mHostActivity).refresh(correctUser);
                 }
             } else {
