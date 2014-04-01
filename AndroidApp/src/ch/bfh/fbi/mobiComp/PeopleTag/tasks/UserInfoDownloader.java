@@ -1,14 +1,18 @@
 package ch.bfh.fbi.mobiComp.PeopleTag.tasks;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 import ch.bfh.fbi.mobiComp.PeopleTag.R;
 import ch.bfh.fbi.mobiComp.PeopleTag.gui.MainActivity;
+import ch.bfh.fbi.mobiComp.PeopleTag.gui.PeopleTagApplication;
 import ch.bfh.fbi.mobiComp.PeopleTag.gui.SonarPanelActivity;
 import ch.bfh.fbi.mobiComp.PeopleTag.gui.UserDataAdapter;
 import ch.bfh.fbi.mobiComp.PeopleTag.model.UserData;
@@ -21,6 +25,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import android.widget.AdapterView.OnItemLongClickListener;
 
 import java.util.ArrayList;
 
@@ -28,7 +33,7 @@ public class UserInfoDownloader extends AsyncTask<String, Void, Boolean> {
 
     private static final String TAG = "UserInfoDownloader"; // for LogCat
     private ArrayList<UserData> datas;
-    private Activity mHostActivity;
+    private MainActivity mHostActivity;
 
     	/*
     	 * auxiliary method to perform a query with HTTP Get (may throw an error if called in the UI-thread)
@@ -58,14 +63,15 @@ public class UserInfoDownloader extends AsyncTask<String, Void, Boolean> {
         /*
          * Constructor
          */
-    	public UserInfoDownloader(Activity hostActivity) {
+    	public UserInfoDownloader(MainActivity hostActivity) {
     		this.mHostActivity = hostActivity;
     	}
 
     	@Override
         protected Boolean doInBackground(String ... Params) { // this method runs in dedicated non-UI thread
     		    		
-    		String searchURL ="http://peopletag.xrj.ch/users";
+    		//String searchURL ="http://peopletag.xrj.ch/users"
+            String searchURL ="http://peopletag.xrj.ch/users/paired-with/" + mHostActivity.getCurrentUserId();
         	// to determine the structure of the json formatted response, download this url into
         	// a JSON formatter such as http://jsonformat.com
     		// Then copy/paste the formatted response into an editor that supports syntax highlighting
@@ -82,7 +88,12 @@ public class UserInfoDownloader extends AsyncTask<String, Void, Boolean> {
     		try {
     			//JSONObject rootJSONObject = new JSONObject(getJSONFeed(searchURL)); // FIXME: this may not work with large json feeds
     			// retrieve the object that contains the array named "data" --> see structure of the json response
-    			JSONArray JSONsessionArray= new JSONArray(getJSONFeed(searchURL));
+                String jsonFeed = getJSONFeed(searchURL);
+                if(jsonFeed == null || jsonFeed.length() < 1) {
+                    // no data
+                    return true;
+                }
+    			JSONArray JSONsessionArray= new JSONArray(jsonFeed);
     			for (int i = 0; i < JSONsessionArray.length(); i++) { // step through array elements  
     				JSONObject JSONsessionObject = JSONsessionArray.getJSONObject(i);  // get a container of an array element
     	                        
@@ -123,7 +134,58 @@ public class UserInfoDownloader extends AsyncTask<String, Void, Boolean> {
                             mHostActivity.startActivity(intent);
                         }
                     });
+
+                    listView.setOnItemLongClickListener(new OnItemLongClickListener() {
+                        @Override
+                        public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+
+                            final UserData userData = (UserData) listView.getItemAtPosition(arg2);
+
+                            final String currentUserID = ((PeopleTagApplication)mHostActivity.getApplication()).getUserID();
+                            if(currentUserID == null || currentUserID.length() <= 0) {
+                                Toast.makeText(mHostActivity, "Please do setup first", Toast.LENGTH_LONG).show();
+                                return false;
+                            }
+
+                            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    if(which == DialogInterface.BUTTON_POSITIVE) {
+
+                                        UserPairTask userPairTask = new UserPairTask( currentUserID, userData.getId(), false) {
+                                            @Override
+                                            public void onPostExecute(Boolean result) {
+                                                if(result) {
+                                                    Toast.makeText(mHostActivity, "Successfully removed paring with " + userData.getDisplayName() + " :)", Toast.LENGTH_LONG).show();
+                                                }
+                                                else {
+                                                    Toast.makeText(mHostActivity, "Error on removed paring with " + userData.getDisplayName() + " :(", Toast.LENGTH_LONG).show();
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onPreExecute() {
+
+                                            }
+
+                                            @Override
+                                            public void onProgressUpdate(Integer... values) {
+
+                                            }
+                                        };
+                                        userPairTask.execute();
+                                    }
+                                }
+                            };
+
+                            AlertDialog.Builder builder = new AlertDialog.Builder(mHostActivity);
+                            builder.setMessage("Delete Paring with " + userData.getDisplayName() + "?").setPositiveButton("Delete", dialogClickListener)
+                                    .setNegativeButton("Cancel", dialogClickListener).show();
+                            return false;
+                        }
+                    });
                 }
+                /*
                 else if (mHostActivity instanceof SonarPanelActivity)
                 {
                     UserData correctUser = null;
@@ -136,6 +198,7 @@ public class UserInfoDownloader extends AsyncTask<String, Void, Boolean> {
                     ((SonarPanelActivity) mHostActivity).setLastUserData(correctUser);
                     ((SonarPanelActivity) mHostActivity).refresh(correctUser);
                 }
+                */
             } else {
                 // optionally handle the unsuccessful query
             }

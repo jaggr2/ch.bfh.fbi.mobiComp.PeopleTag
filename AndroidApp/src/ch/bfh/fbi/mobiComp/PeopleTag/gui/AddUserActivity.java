@@ -26,6 +26,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+import ch.bfh.fbi.mobiComp.PeopleTag.tasks.UserPairTask;
+
 import java.io.IOException;
 import java.nio.charset.Charset;
 
@@ -72,7 +74,8 @@ public class AddUserActivity extends Activity {
             if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
                 NdefMessage[] messages = getNdefMessages(getIntent());
                 byte[] payload = messages[0].getRecords()[0].getPayload();
-                Toast.makeText(this, "received via nfc onCreate: " + new String(payload), Toast.LENGTH_LONG).show();
+                pairCurrentUserWith(new String(payload));
+                //Toast.makeText(this, "received via nfc onCreate: " + new String(payload), Toast.LENGTH_LONG).show();
                 setIntent(new Intent()); // Consume this intent.
                 finish();
             }
@@ -101,6 +104,49 @@ public class AddUserActivity extends Activity {
         }
     }
 
+    public AddUserActivity getUserAddActivity() {
+        return this;
+    }
+
+    protected void pairCurrentUserWith(String nfcString) {
+
+        if(!nfcString.startsWith("id:") || nfcString.length() < 4) {
+            Toast.makeText(getUserAddActivity(), "ERROR: Invalid User-ID", Toast.LENGTH_LONG).show();
+            return;
+        }
+        final String pairingUserID = nfcString.substring(3);
+
+        final String currentUserID = ((PeopleTagApplication)getApplication()).getUserID();
+        if(currentUserID == null || currentUserID.length() <= 0) {
+            Toast.makeText(getUserAddActivity(), "Please do setup first", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        UserPairTask userPairTask = new UserPairTask(currentUserID, pairingUserID, true) {
+            @Override
+            public void onPostExecute(Boolean result) {
+                if(result) {
+                    Toast.makeText(getUserAddActivity(), "Successfully added paring with other User :)\n" + pairingUserID, Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Toast.makeText(getUserAddActivity(), "Error on adding pairing with other user :(\n"  + pairingUserID, Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onPreExecute() {
+
+            }
+
+            @Override
+            public void onProgressUpdate(Integer... values) {
+
+            }
+        };
+
+        userPairTask.execute();
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -108,7 +154,8 @@ public class AddUserActivity extends Activity {
         if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
             NdefMessage[] messages = getNdefMessages(getIntent());
             byte[] payload = messages[0].getRecords()[0].getPayload();
-            Toast.makeText(this, "received via nfc onResume: " + new String(payload), Toast.LENGTH_LONG).show();
+            pairCurrentUserWith(new String(payload));
+            //Toast.makeText(this, "received via nfc onResume: " + new String(payload), Toast.LENGTH_LONG).show();
             setIntent(new Intent()); // Consume this intent.
             finish();
         }
@@ -166,7 +213,8 @@ public class AddUserActivity extends Activity {
             NdefMessage[] msgs = getNdefMessages(intent);
             //romptForContent(msgs[0]);
             byte[] payload = msgs[0].getRecords()[0].getPayload();
-            Toast.makeText(this, "received via nfc intent: " + new String(payload), Toast.LENGTH_LONG).show();
+            pairCurrentUserWith(new String(payload));
+            //Toast.makeText(this, "received via nfc intent: " + new String(payload), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -180,6 +228,6 @@ public class AddUserActivity extends Activity {
             return;
         }
 
-        Toast.makeText(this, "Not yet implemented", Toast.LENGTH_SHORT).show();
+        pairCurrentUserWith("id:" + editText.getText());
     }
 }

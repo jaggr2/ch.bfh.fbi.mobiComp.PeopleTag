@@ -89,7 +89,7 @@ public abstract class UserUpdateTask extends AsyncTask<String, Integer, UserData
 
         try {
             HttpResponse response = makePostRequest(url, json);
-            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+            if (response != null && response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                 jsonResponse = EntityUtils.toString(response.getEntity());
                 Log.d(TAG, "POST " + url + " returned Code " + response.getStatusLine().getStatusCode() + " with Content: " + jsonResponse);
             } else {

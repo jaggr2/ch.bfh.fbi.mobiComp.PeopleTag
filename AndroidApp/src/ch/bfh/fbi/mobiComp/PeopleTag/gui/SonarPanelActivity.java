@@ -51,6 +51,7 @@ public class SonarPanelActivity extends Activity implements View.OnClickListener
 
     private static SonarPanelActivity singleton;
 
+    /*
     private Runnable serverUpdate = new Runnable() {
         @Override
         public void run() {
@@ -58,6 +59,7 @@ public class SonarPanelActivity extends Activity implements View.OnClickListener
             handler.postDelayed(serverUpdate, 30 * 1000);
         }
     };
+    */
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -98,7 +100,7 @@ public class SonarPanelActivity extends Activity implements View.OnClickListener
         currentLocation = geoTracker.getLocation();
         sonarView.setCurrent(currentLocation);
 
-        handler.postDelayed(serverUpdate, 30 * 1000);
+       // handler.postDelayed(serverUpdate, 30 * 1000);
 
         String userId;
         if (savedInstanceState == null) {
@@ -113,8 +115,8 @@ public class SonarPanelActivity extends Activity implements View.OnClickListener
         }
         this.userid = userId;
 
-        UserInfoDownloader userInfoDownloader = new UserInfoDownloader(this);
-        userInfoDownloader.execute();
+        //UserInfoDownloader userInfoDownloader = new UserInfoDownloader(this);
+        //userInfoDownloader.execute();
     }
 
     @Override
@@ -186,14 +188,14 @@ public class SonarPanelActivity extends Activity implements View.OnClickListener
         IntentFilter updateRecive = new IntentFilter();
         updateRecive.addAction(MainActivity.LOCATION_UPDATE);
         registerReceiver(receiver, updateRecive);
-        handler.postDelayed(serverUpdate, 30 * 1000);
+        //handler.postDelayed(serverUpdate, 30 * 1000);
         super.onResume();
     }
 
     @Override
     protected void onPause() {
         unregisterReceiver(receiver);
-        handler.removeCallbacks(serverUpdate);
+       // handler.removeCallbacks(serverUpdate);
         super.onPause();
     }
 

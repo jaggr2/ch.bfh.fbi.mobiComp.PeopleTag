@@ -108,6 +108,10 @@ public class MainActivity extends Activity {
         }
     }
 
+    public String getCurrentUserId() {
+        return ((PeopleTagApplication)getApplication()).getUserID();
+    }
+
     @Override
     protected void onResume() {
         IntentFilter updateRecive = new IntentFilter();
