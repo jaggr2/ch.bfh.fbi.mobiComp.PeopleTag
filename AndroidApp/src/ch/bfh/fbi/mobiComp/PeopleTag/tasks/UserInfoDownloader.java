@@ -70,8 +70,14 @@ public class UserInfoDownloader extends AsyncTask<String, Void, Boolean> {
     	@Override
         protected Boolean doInBackground(String ... Params) { // this method runs in dedicated non-UI thread
     		    		
-    		//String searchURL ="http://peopletag.xrj.ch/users"
-            String searchURL ="http://peopletag.xrj.ch/users/paired-with/" + mHostActivity.getCurrentUserId();
+    		String searchURL;
+
+            if(((PeopleTagApplication)mHostActivity.getApplication()).getPrefShowall()) {
+                searchURL = "http://peopletag.xrj.ch/users";
+            }
+            else {
+                searchURL = "http://peopletag.xrj.ch/users/paired-with/" + mHostActivity.getCurrentUserId();
+            }
         	// to determine the structure of the json formatted response, download this url into
         	// a JSON formatter such as http://jsonformat.com
     		// Then copy/paste the formatted response into an editor that supports syntax highlighting

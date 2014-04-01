@@ -13,6 +13,7 @@ public class PeopleTagApplication extends Application {
     public static final String PREFS_NAME = "PeopleTagUser";
     public static final String PREF_ID = "ID";
     public static final String PREF_DISPLAYNAME = "displayName";
+    public static final String PREF_SHOWALL = "showAllUsers";
     private SharedPreferences settings = null;
 
     public String getUserID() {
@@ -21,6 +22,21 @@ public class PeopleTagApplication extends Application {
 
     public String getDisplayName() {
         return (settings != null ? this.settings.getString(PREF_DISPLAYNAME, "") : "");
+    }
+
+    public Boolean getPrefShowall() {
+        return (settings != null && this.settings.getBoolean(PREF_SHOWALL, false));
+    }
+
+    public void setPrefShowall(Boolean enabled) {
+        // We need an Editor object to make preference changes.
+        // All objects are from android.context.Context
+        SharedPreferences.Editor editor = settings.edit();
+
+        editor.putBoolean(PREF_SHOWALL, enabled);
+
+        // Commit the edits!
+        editor.commit();
     }
 
     public void setUserData(UserData data) {

@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.*;
 import ch.bfh.fbi.mobiComp.PeopleTag.R;
@@ -42,6 +44,16 @@ public class SetupActivity extends Activity {
         final TextView textViewSubTitle = (TextView) findViewById(R.id.textViewSubTitle);
         textViewSubTitle.setText(((PeopleTagApplication)getApplication()).getUserID().length() > 0 ? "Your ID: " + ((PeopleTagApplication)getApplication()).getUserID() : "Your ID: none");
         textViewSubTitle.setVisibility(((PeopleTagApplication)getApplication()).getUserID().length() > 0 ? View.VISIBLE : View.INVISIBLE);
+
+        final CheckBox checkBoxShowAll = (CheckBox) findViewById(R.id.checkBoxShowAll);
+        checkBoxShowAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
+                ((PeopleTagApplication)getApplication()).setPrefShowall(isChecked);
+            }
+        });
+        checkBoxShowAll.setChecked(((PeopleTagApplication)getApplication()).getPrefShowall());
     }
 
     @Override
