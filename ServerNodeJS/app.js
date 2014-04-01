@@ -37,6 +37,9 @@ app.post('/users', user.adduser(db));
 app.get('/users/:id', user.getuser(db));
 app.post('/users/:id', user.updateuser(db));
 app.delete('/users/:id', user.deleteuser(db));
+app.post('/pairing/:firstId/:secondId', user.addpairing(db));
+app.delete('/pairing/:firstId/:secondId', user.deletepairing(db));
+app.get('/users/paired-with/:id', user.getPairedWith(db));
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('NodeJS server listening on port ' + app.get('port'));

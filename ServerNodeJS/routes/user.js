@@ -90,12 +90,150 @@ exports.updateuser = function(db) {
 /*
  * DELETE to deleteuser.
  */
-
 exports.deleteuser = function(db) {
     return function(req, res) {
         var userToDelete = req.params.id;
         db.collection('userlist').removeById(userToDelete, function(err, result) {
             res.send((result === 1) ? { msg: '' } : { msg:'error: ' + err });
+        });
+    }
+};
+
+exports.addpairing = function(db) {
+    return function(req, res) {
+        var firstUser = req.params.firstId;
+        var secondUser = req.params.secondId;
+
+        db.collection('userlist').findById(firstUser, function(err, result) {
+            if( err !== null) {
+                res.send(404, { msg: 'User with ID ' + firstUser + ' not found!' });
+                return;
+            }
+
+
+            if( result.pairings === undefined ) {
+                result.pairings = [];
+            }
+
+            var pos = result.pairings.map(function(e) { return e.withUser; }).indexOf(secondUser);
+            if(pos !== -1) {
+                result.pairings[pos] = { withUser: secondUser, createdAt: new Date() };
+            }
+            else {
+                result.pairings.push({ withUser: secondUser, createdAt: new Date() });
+            }
+
+            db.collection('userlist').updateById(firstUser, { $set : { pairings: result.pairings } }, { safe: true }, function(err, modifiedcount){
+                if( err !== null) {
+                    res.send(400, { msg: 'Error while updating User ' + firstUser });
+                    return;
+                }
+
+                db.collection('userlist').findById(secondUser, function(err, result) {
+                    if( err !== null) {
+                        res.send(404, { msg: 'User with ID ' + secondUser + ' not found!' });
+                        return;
+                    }
+
+
+                    if( result.pairings === undefined ) {
+                        result.pairings = [];
+                    }
+
+                    var pos = result.pairings.map(function(e) { return e.withUser; }).indexOf(firstUser);
+                    if(pos !== -1) {
+                        result.pairings[pos] = { withUser: firstUser, createdAt: new Date() };
+                    }
+                    else {
+                        result.pairings.push({ withUser: firstUser, createdAt: new Date() });
+                    }
+
+                    db.collection('userlist').updateById(secondUser, { $set : { pairings: result.pairings } }, { safe: true }, function(err, modifiedcount){
+
+                        res.send(
+                            (err === null) ? { msg: modifiedcount } : { msg: err }
+                        );
+                    });
+                });
+            });
+        });
+    }
+};
+
+exports.deletepairing = function(db) {
+    return function(req, res) {
+        var firstUser = req.params.firstId;
+        var secondUser = req.params.secondId;
+
+        db.collection('userlist').findById(firstUser, function(err, result) {
+            if( err !== null) {
+                res.send(404, { msg: 'User with ID ' + firstUser + ' not found!' });
+                return;
+            }
+
+
+            if( result.pairings === undefined ) {
+                result.pairings = [];
+            }
+
+            var pos = result.pairings.map(function(e) { return e.withUser; }).indexOf(secondUser);
+            if(pos !== -1) {
+                result.pairings.splice(pos, 1);
+
+                db.collection('userlist').updateById(firstUser, { $set : { pairings: result.pairings } }, { safe: true }, function(err, modifiedcount){
+                    if( err !== null) {
+                        res.send(400, { msg: 'Error while updating User ' + firstUser });
+                        return;
+                    }
+
+                    db.collection('userlist').findById(secondUser, function(err, result) {
+                        if( err !== null) {
+                            res.send(404, { msg: 'User with ID ' + firstUser + ' not found!' });
+                            return;
+                        }
+
+                        if( result.pairings === undefined ) {
+                            result.pairings = [];
+                        }
+
+                        var pos = result.pairings.map(function(e) { return e.withUser; }).indexOf(firstUser);
+                        if(pos !== -1) {
+                            result.pairings.splice(pos, 1);
+
+                            db.collection('userlist').updateById(secondUser, { $set : { pairings: result.pairings } }, { safe: true }, function(err, modifiedcount){
+
+                                res.send(
+                                    (err === null) ? { msg: modifiedcount } : { msg: err }
+                                );
+                            });
+                        }
+                    });
+                });
+            }
+        });
+    }
+};
+
+exports.getPairedWith = function(db) {
+    return function(req, res) {
+
+
+        var userToGet = req.params.id;
+        db.collection('userlist').findById(userToGet, function(err, theUser) {
+            if( err !== null) {
+                res.send(404, { msg: 'User with ID ' + firstUser + ' not found!' });
+                return;
+            }
+
+            var ObjectID = require('mongoskin').ObjectID
+
+            var theIDs = theUser.pairings.map(function(e) { return new ObjectID(e.withUser); });
+
+            db.collection('userlist').find({
+                '_id': { $in: theIDs}
+            }).toArray(function(err, users) {
+                res.send(users);
+            });
         });
     }
 };
