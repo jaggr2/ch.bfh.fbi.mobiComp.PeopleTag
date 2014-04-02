@@ -9,14 +9,17 @@ import android.location.Location;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.Toast;
 import ch.bfh.fbi.mobiComp.PeopleTag.R;
+import ch.bfh.fbi.mobiComp.PeopleTag.model.UserData;
 import ch.bfh.fbi.mobiComp.PeopleTag.service.GeoTracker;
 import ch.bfh.fbi.mobiComp.PeopleTag.tasks.UserInfoDownloader;
+import ch.bfh.fbi.mobiComp.PeopleTag.tasks.UserUpdateTask;
 
 public class MainActivity extends Activity {
 
@@ -34,6 +37,29 @@ public class MainActivity extends Activity {
 
                 listView.invalidate();
 
+                String userID = ((PeopleTagApplication)getApplication()).getUserID();
+                String displayName = ((PeopleTagApplication)getApplication()).getDisplayName();
+
+                if (userID.length() > 0)
+                {
+                    UserUpdateTask userUpdateTask = new UserUpdateTask(userID, displayName, actualLoc) {
+                        @Override
+                        public void onPostExecute(UserData result) {
+                            Log.d("Update Task", "User position updated");
+                        }
+
+                        @Override
+                        public void onPreExecute() {
+
+                        }
+
+                        @Override
+                        public void onProgressUpdate(Integer... values) {
+
+                        }
+                    };
+                    userUpdateTask.execute();
+                }
                 Toast.makeText(context, actualLoc.toString(),
                         Toast.LENGTH_SHORT).show();
             }
