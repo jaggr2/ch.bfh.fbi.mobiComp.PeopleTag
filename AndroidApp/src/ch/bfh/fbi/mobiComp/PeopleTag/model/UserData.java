@@ -4,6 +4,8 @@ package ch.bfh.fbi.mobiComp.PeopleTag.model;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by Pascal on 21.03.14.
@@ -24,7 +26,18 @@ public class UserData {
         this.latitude = latitude;
         this.longitude = longitude;
         this.timeStamp = timeStamp;
+    }
 
+    public UserData(JSONObject jsonObject) throws JSONException {
+
+        if(jsonObject == null) {
+            throw new JSONException("JsonObject is null");
+        }
+        this.id = jsonObject.get("_id").toString();
+        this.displayName = jsonObject.get("displayName").toString();
+        this.latitude = jsonObject.optDouble("currentLatitude",0.0);
+        this.longitude = jsonObject.optDouble("currentLongitude",0.0);
+        this.timeStamp = jsonObject.getString("updatedAt");
     }
 
     public String getId() {

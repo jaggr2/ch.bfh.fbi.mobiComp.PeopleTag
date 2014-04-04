@@ -29,11 +29,10 @@ import android.widget.AdapterView.OnItemLongClickListener;
 
 import java.util.ArrayList;
 
-public class UserInfoDownloader extends AsyncTask<String, Void, Boolean> {
+public abstract class UserInfoDownloader extends AsyncTask<String, Void, Boolean> {
 
     private static final String TAG = "UserInfoDownloader"; // for LogCat
-    private ArrayList<UserData> datas;
-    private MainActivity mHostActivity;
+    protected PeopleTagApplication peopleTagApplication;
 
     	/*
     	 * auxiliary method to perform a query with HTTP Get (may throw an error if called in the UI-thread)
@@ -63,8 +62,8 @@ public class UserInfoDownloader extends AsyncTask<String, Void, Boolean> {
         /*
          * Constructor
          */
-    	public UserInfoDownloader(MainActivity hostActivity) {
-    		this.mHostActivity = hostActivity;
+    	public UserInfoDownloader(PeopleTagApplication peopleTagApplication) {
+    		this.peopleTagApplication = peopleTagApplication;
     	}
 
     	@Override
@@ -72,11 +71,11 @@ public class UserInfoDownloader extends AsyncTask<String, Void, Boolean> {
     		    		
     		String searchURL;
 
-            if(((PeopleTagApplication)mHostActivity.getApplication()).getPrefShowall()) {
+            if(peopleTagApplication.getPrefShowall()) {
                 searchURL = "http://peopletag.xrj.ch/users";
             }
             else {
-                searchURL = "http://peopletag.xrj.ch/users/paired-with/" + mHostActivity.getCurrentUserId();
+                searchURL = "http://peopletag.xrj.ch/users/paired-with/" + peopleTagApplication.getUserID();
             }
         	// to determine the structure of the json formatted response, download this url into
         	// a JSON formatter such as http://jsonformat.com
@@ -87,7 +86,10 @@ public class UserInfoDownloader extends AsyncTask<String, Void, Boolean> {
     		//       - array elements contain comma-separated name-value pairs
             //       - names and text-values are surrounded with double quotes
     		// the subsequent code assumes that the json-formatted response to the http-get has this structure
-    		
+
+            return peopleTagApplication.reloadListFromJson(getJSONFeed(searchURL));
+
+            /*
     		datas = new ArrayList<UserData>();
     		Boolean querySuccessful = false;
     		  		
@@ -118,106 +120,19 @@ public class UserInfoDownloader extends AsyncTask<String, Void, Boolean> {
     			querySuccessful = true;
     		} catch (JSONException e) {
     			Log.e(TAG, "JSON Exception");
-    		}    		
-    		return querySuccessful;
-        }      
+    		}
 
-        @Override
-        protected void onPostExecute(Boolean querySuccessful) {
-        	if (querySuccessful) {
-                if (mHostActivity instanceof MainActivity)
-                {
-                    //Update List in MainActivity
-                    final ListView listView = (ListView) mHostActivity.findViewById(R.id.user_list);
-                    listView.setAdapter(new UserDataAdapter(mHostActivity, R.layout.listitem, datas));
-                    listView.setClickable(true);
-                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                            UserData o = (UserData) listView.getItemAtPosition(position);
-                            Intent intent = new Intent(mHostActivity, SonarPanelActivity.class);
-                            intent.putExtra("user", o.getDisplayName());
-                            mHostActivity.startActivity(intent);
-                        }
-                    });
-
-                    listView.setOnItemLongClickListener(new OnItemLongClickListener() {
-                        @Override
-                        public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-
-                            final UserData userData = (UserData) listView.getItemAtPosition(arg2);
-
-                            final String currentUserID = ((PeopleTagApplication)mHostActivity.getApplication()).getUserID();
-                            if(currentUserID == null || currentUserID.length() <= 0) {
-                                Toast.makeText(mHostActivity, "Please do setup first", Toast.LENGTH_LONG).show();
-                                return false;
-                            }
-
-                            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    if(which == DialogInterface.BUTTON_POSITIVE) {
-
-                                        UserPairTask userPairTask = new UserPairTask( currentUserID, userData.getId(), false) {
-                                            @Override
-                                            public void onPostExecute(Boolean result) {
-                                                if(result) {
-                                                    Toast.makeText(mHostActivity, "Successfully removed paring with " + userData.getDisplayName() + " :)", Toast.LENGTH_LONG).show();
-                                                }
-                                                else {
-                                                    Toast.makeText(mHostActivity, "Error on removed paring with " + userData.getDisplayName() + " :(", Toast.LENGTH_LONG).show();
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onPreExecute() {
-
-                                            }
-
-                                            @Override
-                                            public void onProgressUpdate(Integer... values) {
-
-                                            }
-                                        };
-                                        userPairTask.execute();
-                                    }
-                                }
-                            };
-
-                            AlertDialog.Builder builder = new AlertDialog.Builder(mHostActivity);
-                            builder.setMessage("Delete Paring with " + userData.getDisplayName() + "?").setPositiveButton("Delete", dialogClickListener)
-                                    .setNegativeButton("Cancel", dialogClickListener).show();
-                            return false;
-                        }
-                    });
-                }
-                /*
-                else if (mHostActivity instanceof SonarPanelActivity)
-                {
-                    UserData correctUser = null;
-                    for(UserData data : datas){
-                        if(data.getDisplayName().equalsIgnoreCase(((SonarPanelActivity) mHostActivity).getUserid())){
-                            correctUser = data;
-                        }
-                    }
-
-                    ((SonarPanelActivity) mHostActivity).setLastUserData(correctUser);
-                    ((SonarPanelActivity) mHostActivity).refresh(correctUser);
-                }
-                */
-            } else {
-                // optionally handle the unsuccessful query
-            }
+    		return querySuccessful; */
         }
 
-        @Override
-        protected void onPreExecute() {
-        	// not used in this example
-        }
 
-        @Override
-        protected void onProgressUpdate(Void... values) {
-        	// not used in this example
-        }
+    @Override
+    public abstract void onPostExecute(Boolean result);
+
+    @Override
+    public abstract void onPreExecute();
+
+    @Override
+    public abstract void onProgressUpdate(Void... values);
   } 
 
