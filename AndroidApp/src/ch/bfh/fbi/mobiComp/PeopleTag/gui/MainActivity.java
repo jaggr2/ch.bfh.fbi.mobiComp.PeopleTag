@@ -240,20 +240,12 @@ public class MainActivity extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            /*
+
             case R.id.menuitem_search:
-
-
                   reloadUsers();
 
                   return true;
-//            case R.id.menuitem_send:
-            //                if(!mySound.isPlaying()) {
-//                    mySound.start();
-//                }
-//                registerPosition();
-//                return true;
-*/
+
             case R.id.menuitem_add:
                 Intent launchAddUser = new Intent(MainActivity.this,AddUserActivity.class);
 
@@ -265,9 +257,9 @@ public class MainActivity extends Activity {
                 startActivityForResult(launchNewIntent, 0);
                 return true;
 
-            case R.id.menuitem_quit:
+/*            case R.id.menuitem_quit:
                 finish(); // close the activity
-                return true;
+                return true; */
         }
         return false;
     }

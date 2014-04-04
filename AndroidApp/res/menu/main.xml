@@ -2,17 +2,11 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!--  <item   android:id="@+id/menuitem_search"
+    <item   android:id="@+id/menuitem_search"
             android:icon="@android:drawable/ic_menu_view"
             android:showAsAction="ifRoom"
             android:title="@string/ui_menu_search">
     </item>
-    <item
-            android:id="@+id/menuitem_send"
-            android:icon="@android:drawable/ic_menu_send"
-            android:showAsAction="ifRoom"
-            android:title="@string/ui_menu_send">
-    </item>-->
     <item   android:id="@+id/menuitem_add"
             android:icon="@android:drawable/ic_menu_add"
             android:showAsAction="ifRoom"
@@ -23,10 +17,10 @@
             android:showAsAction="ifRoom"
             android:title="@string/ui_menu_setup">
     </item>
-    <item   android:id="@+id/menuitem_quit"
+    <!--   <item   android:id="@+id/menuitem_quit"
             android:icon="@android:drawable/ic_menu_close_clear_cancel"
             android:showAsAction="ifRoom"
             android:title="@string/ui_menu_quit">
-    </item>
+    </item> -->
 
 </menu>
