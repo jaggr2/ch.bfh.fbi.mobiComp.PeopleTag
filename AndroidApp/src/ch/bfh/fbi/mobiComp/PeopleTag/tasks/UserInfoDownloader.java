@@ -1,33 +1,14 @@
 package ch.bfh.fbi.mobiComp.PeopleTag.tasks;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.Toast;
-import ch.bfh.fbi.mobiComp.PeopleTag.R;
-import ch.bfh.fbi.mobiComp.PeopleTag.gui.MainActivity;
 import ch.bfh.fbi.mobiComp.PeopleTag.gui.PeopleTagApplication;
-import ch.bfh.fbi.mobiComp.PeopleTag.gui.SonarPanelActivity;
-import ch.bfh.fbi.mobiComp.PeopleTag.gui.UserDataAdapter;
-import ch.bfh.fbi.mobiComp.PeopleTag.model.UserData;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import android.widget.AdapterView.OnItemLongClickListener;
-
-import java.util.ArrayList;
 
 public abstract class UserInfoDownloader extends AsyncTask<String, Void, Boolean> {
 
@@ -88,41 +69,6 @@ public abstract class UserInfoDownloader extends AsyncTask<String, Void, Boolean
     		// the subsequent code assumes that the json-formatted response to the http-get has this structure
 
             return peopleTagApplication.reloadListFromJson(getJSONFeed(searchURL));
-
-            /*
-    		datas = new ArrayList<UserData>();
-    		Boolean querySuccessful = false;
-    		  		
-    		try {
-    			//JSONObject rootJSONObject = new JSONObject(getJSONFeed(searchURL)); // FIXME: this may not work with large json feeds
-    			// retrieve the object that contains the array named "data" --> see structure of the json response
-                String jsonFeed = getJSONFeed(searchURL);
-                if(jsonFeed == null || jsonFeed.length() < 1) {
-                    // no data
-                    return true;
-                }
-    			JSONArray JSONsessionArray= new JSONArray(jsonFeed);
-    			for (int i = 0; i < JSONsessionArray.length(); i++) { // step through array elements  
-    				JSONObject JSONsessionObject = JSONsessionArray.getJSONObject(i);  // get a container of an array element
-    	                        
-    				// the container contains name-value pairs -> retrieve value by name
-    				UserData data = new UserData(
-    	               				    // mind security threats resulting from the get method internally using eval
-    									// (exploits by malicious content in the response are feasible)
-    									// we do not fix this for the moti project as security is not a concern
-    	            					JSONsessionObject.get("_id").toString(),
-    	            					JSONsessionObject.get("displayName").toString(),
-                                        JSONsessionObject.optDouble("currentLatitude",0.0),
-                                        JSONsessionObject.optDouble("currentLongitude",0.0),
-                                        JSONsessionObject.getString("updatedAt"));
-    				datas.add(data);
-    			} // for (int i = 0; i < JSONsessionArray.length(); i++)
-    			querySuccessful = true;
-    		} catch (JSONException e) {
-    			Log.e(TAG, "JSON Exception");
-    		}
-
-    		return querySuccessful; */
         }
 
 

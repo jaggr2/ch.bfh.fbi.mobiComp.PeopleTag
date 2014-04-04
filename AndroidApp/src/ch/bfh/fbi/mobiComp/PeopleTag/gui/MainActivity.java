@@ -166,7 +166,7 @@ public class MainActivity extends Activity implements IUserListChangedListener {
                     public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
                         UserData o = (UserData) listView.getItemAtPosition(position);
                         Intent intent = new Intent(mHostActivity, SonarPanelActivity.class);
-                        intent.putExtra("user", o.getDisplayName());
+                        intent.putExtra("user", o.getId());
                         mHostActivity.startActivity(intent);
                     }
                 });
@@ -290,13 +290,10 @@ public class MainActivity extends Activity implements IUserListChangedListener {
 
             case R.id.menuitem_setup:
                 Intent launchNewIntent = new Intent(MainActivity.this,SetupActivity.class);
-
                 startActivityForResult(launchNewIntent, 0);
                 return true;
 
             case R.id.menuitem_quit:
-//                Toast.makeText(this, getString(R.string.ui_menu_quit),
-//                        Toast.LENGTH_SHORT).show();
                 finish(); // close the activity
                 return true;
         }
