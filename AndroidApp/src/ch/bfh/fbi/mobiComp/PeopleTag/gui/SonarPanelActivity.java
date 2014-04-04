@@ -100,10 +100,8 @@ public class SonarPanelActivity extends Activity implements View.OnClickListener
         registerReceiver(receiver, updateRecive);
 
         // Get initial Location....
-        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
-        String bestProvider = locationManager.getBestProvider(criteria, false);
-         currentLocation = locationManager.getLastKnownLocation(bestProvider);
+        MainActivity mainActivity = MainActivity.getInstance();
+        currentLocation = (mainActivity.getActualLocation() != null ? mainActivity.getActualLocation() : null);
 
         System.out.println("cuur"+currentLocation);
 

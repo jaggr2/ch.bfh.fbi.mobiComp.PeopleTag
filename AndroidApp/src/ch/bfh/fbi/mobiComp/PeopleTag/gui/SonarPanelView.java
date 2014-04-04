@@ -34,15 +34,15 @@ public class SonarPanelView extends View {
     }
 
     private static int SCALE_FACTOR = 3;
-    private int midPos = 170*SCALE_FACTOR;
-    private int radius = 150*SCALE_FACTOR;
-    private int SPACER_LARGE = 30*SCALE_FACTOR;
-    private int SPACER_SMALL = 10*SCALE_FACTOR;
+    private float midPos = 170*SCALE_FACTOR;
+    private float radius = 150*SCALE_FACTOR;
+    private float SPACER_LARGE = 30*SCALE_FACTOR;
+    private float SPACER_SMALL = 10*SCALE_FACTOR;
     @Override
     public void onDraw(Canvas canvas) {
         drawSonarBackground(canvas);
         drawTargetLines(canvas);
-        drawUserPosition(canvas, 1111111111);
+        drawUserPosition(canvas, 5000);
     }
 
     private void drawSonarBackground(Canvas canvas) {
@@ -75,15 +75,19 @@ public class SonarPanelView extends View {
         System.out.println("swen."+ current + "---" + userLocation);
        if(userLocation != null && current != null && userLocation.getDistanceToUserLocation(current) < resolutionInMeter) {
             // userLoc.getAngleFromCurrentLocationToUserLoaction();
-
-           float distanceFromCenter = radius/1000 * userLocation.getDistanceToUserLocation(current);
+           System.out.println("distance"+userLocation.getDistanceToUserLocation(current));
+           System.out.println("radius"+radius);
+           float distanceFromCenter = (radius/resolutionInMeter) * userLocation.getDistanceToUserLocation(current);
+           System.out.println("distanceFromCenter"+distanceFromCenter);
             double angle = userLocation.getAngleFromCurrentLocationToUserLoaction(current);
+           System.out.println("angle"+angle);
 
         // Demodaten
           //  float distanceFromCenter = radius/100*70;
          //   double angle = 30;
 
            Point user = getPosition(angle,distanceFromCenter);
+           System.out.println("position"+user.x+":"+user.y);
 
             paint.setColor(Color.RED);
             paint.setStrokeWidth(6 * SCALE_FACTOR);
@@ -97,8 +101,8 @@ public class SonarPanelView extends View {
 
         System.out.println(radians);
 
-        int x = (int) radians * (int) distance;
-        int y = (int) radians * (int) distance;
+        int x = (int) ((double) sin(radians) * (float) distance);
+        int y = (int) ((double) cos(radians) * (float) distance);
 
         System.out.println(x);
         System.out.println(y);
