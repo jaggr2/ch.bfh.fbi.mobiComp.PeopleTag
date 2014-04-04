@@ -91,31 +91,37 @@ public class SonarPanelView extends View {
 
             paint.setColor(Color.RED);
             paint.setStrokeWidth(6 * SCALE_FACTOR);
-            canvas.drawPoint((radius+user.x), (radius+user.y), paint);
+            canvas.drawPoint((midPos+user.x), (midPos+user.y), paint);
         }
     }
 
     public Point getPosition(double angle, float distance)
     {
         double radians = Math.toRadians(angle);
-
-        System.out.println(radians);
-
+        if(angle > 270){
+            radians=Math.toRadians(90-(angle-270));
+        }
+        else if(angle > 180){
+            radians=Math.toRadians(angle-180);
+        }
+        else if(angle > 90){
+            radians=Math.toRadians(90-(angle-90));
+        }
         int x = (int) ((double) sin(radians) * (float) distance);
         int y = (int) ((double) cos(radians) * (float) distance);
 
         System.out.println(x);
         System.out.println(y);
 
-        if(radians < (Math.PI/2)) {
-            return new Point(x,y);
-        }
-
-        else if(radians > (Math.PI/2) && radians < (Math.PI)) {
+        if(angle <= 90) {
             return new Point(x,-y);
         }
 
-        else if(radians > (Math.PI) && radians < (Math.PI+(Math.PI/2))) {
+        else if(angle <= 180) {
+            return new Point(x,y);
+        }
+
+        else if(angle <= 270) {
             return new Point(-x,y);
         }
 
