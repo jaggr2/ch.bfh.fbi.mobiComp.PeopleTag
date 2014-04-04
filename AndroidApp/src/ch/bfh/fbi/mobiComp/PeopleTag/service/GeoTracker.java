@@ -13,6 +13,9 @@ import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
 import ch.bfh.fbi.mobiComp.PeopleTag.gui.MainActivity;
+import ch.bfh.fbi.mobiComp.PeopleTag.gui.PeopleTagApplication;
+import ch.bfh.fbi.mobiComp.PeopleTag.model.UserData;
+import ch.bfh.fbi.mobiComp.PeopleTag.tasks.UserUpdateTask;
 
 public class GeoTracker extends Service implements LocationListener {
 
@@ -55,8 +58,7 @@ public class GeoTracker extends Service implements LocationListener {
 
     public Location getLocation() {
         try {
-            locationManager = (LocationManager) getApplicationContext()
-                    .getSystemService(LOCATION_SERVICE);
+            locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
 
             // getting GPS status
             isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
@@ -191,11 +193,35 @@ public class GeoTracker extends Service implements LocationListener {
         alertDialog.show();
     }
 
-    private void updateLocationOnMain (Location location)
+    private void updateLocationOnMain (final Location location)
     {
         Intent IntentLocationUpdate = new Intent(MainActivity.LOCATION_UPDATE);
         IntentLocationUpdate.putExtra("location",location);
         getApplicationContext().sendBroadcast(IntentLocationUpdate);
+
+        String userID = ((PeopleTagApplication)getApplication()).getUserID();
+        String displayName = ((PeopleTagApplication)getApplication()).getDisplayName();
+
+        if (userID != null && userID.length() > 0)
+        {
+            UserUpdateTask userUpdateTask = new UserUpdateTask(userID, displayName, location) {
+                @Override
+                public void onPostExecute(UserData result) {
+                    Log.d("Update Task", "User position updated");
+                }
+
+                @Override
+                public void onPreExecute() {
+
+                }
+
+                @Override
+                public void onProgressUpdate(Integer... values) {
+
+                }
+            };
+            userUpdateTask.execute();
+        }
     }
 
     @Override

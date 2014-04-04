@@ -24,7 +24,7 @@ import ch.bfh.fbi.mobiComp.PeopleTag.tasks.UserUpdateTask;
 
 import java.util.ArrayList;
 
-public class MainActivity extends Activity implements IUserListChangedListener {
+public class MainActivity extends Activity {
 
     public final static String LOCATION_UPDATE = "LocationUpdate";
     private Location actualLoc = null;
@@ -40,29 +40,6 @@ public class MainActivity extends Activity implements IUserListChangedListener {
 
                 listView.invalidate();
 
-                String userID = ((PeopleTagApplication)getApplication()).getUserID();
-                String displayName = ((PeopleTagApplication)getApplication()).getDisplayName();
-
-                if (userID.length() > 0)
-                {
-                    UserUpdateTask userUpdateTask = new UserUpdateTask(userID, displayName, actualLoc) {
-                        @Override
-                        public void onPostExecute(UserData result) {
-                            Log.d("Update Task", "User position updated");
-                        }
-
-                        @Override
-                        public void onPreExecute() {
-
-                        }
-
-                        @Override
-                        public void onProgressUpdate(Integer... values) {
-
-                        }
-                    };
-                    userUpdateTask.execute();
-                }
                 Toast.makeText(context, actualLoc.toString(),
                         Toast.LENGTH_SHORT).show();
             }
@@ -106,15 +83,13 @@ public class MainActivity extends Activity implements IUserListChangedListener {
 
         setContentView(R.layout.main);
 
-        ((PeopleTagApplication)getApplication()).addUserListChangedListener(this);
-
         // TODO LAN Need to Refresh the User Info from time to time -> is move to
         // GeoPositionListener onPositionChange a good idea???
         // Maybe tooMuch dataTransfer between Client/Server because the data often changes
         // but it would be the best Solution when our position changes we need to be sure
         // the others are at the current locations to display valid data...
         // Sure the app should have a refresh button to updates myLocation and the friendslocation...
-        reloadUsers();
+
 
         IntentFilter updateRecive = new IntentFilter();
         updateRecive.addAction(LOCATION_UPDATE);
@@ -129,14 +104,6 @@ public class MainActivity extends Activity implements IUserListChangedListener {
         //if(!gps.canGetLocation()){
         //    gps.showSettingsAlert();
         //}
-    }
-
-    // Should only used to force a location Update...
-    public void registerPosition()
-    {
-        if (actualLoc != null) {
-            Toast.makeText(this, "Position Registered: Longitude: " + actualLoc.getLongitude() + " Latitude: " + actualLoc.getLatitude(), Toast.LENGTH_SHORT).show();
-        }
     }
 
     public void reloadUsers() {
@@ -154,7 +121,7 @@ public class MainActivity extends Activity implements IUserListChangedListener {
 
                 final ListView listView = (ListView) mHostActivity.findViewById(R.id.user_list);
 
-                final ArrayList<UserData> dataList = new ArrayList<>();
+                final ArrayList<UserData> dataList = new ArrayList<UserData>();
                 for(UserData userData : peopleTagApplication.getUsers()) {
                     dataList.add(userData);
                 }
@@ -243,6 +210,9 @@ public class MainActivity extends Activity implements IUserListChangedListener {
         updateRecive.addAction(LOCATION_UPDATE);
         registerReceiver(receiver, updateRecive);
         handler.postDelayed(serverUpdate, 30 * 1000);
+
+        reloadUsers();
+
         super.onResume();
     }
 
@@ -270,6 +240,7 @@ public class MainActivity extends Activity implements IUserListChangedListener {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            /*
             case R.id.menuitem_search:
 
 
@@ -282,6 +253,7 @@ public class MainActivity extends Activity implements IUserListChangedListener {
 //                }
 //                registerPosition();
 //                return true;
+*/
             case R.id.menuitem_add:
                 Intent launchAddUser = new Intent(MainActivity.this,AddUserActivity.class);
 
@@ -303,10 +275,5 @@ public class MainActivity extends Activity implements IUserListChangedListener {
     public Location getActualLocation()
     {
         return this.actualLoc;
-    }
-
-    @Override
-    public void userListChanged(PeopleTagApplication application) {
-
     }
 }

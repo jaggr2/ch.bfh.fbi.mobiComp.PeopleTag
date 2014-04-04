@@ -50,20 +50,6 @@ public class PeopleTagApplication extends Application {
         return null;
     }
 
-    private final ConcurrentLinkedQueue<IUserListChangedListener> eventListeners = new ConcurrentLinkedQueue<IUserListChangedListener>();
-
-    public void addUserListChangedListener( IUserListChangedListener listener )
-    {
-        if ( ! eventListeners.contains( listener ) ) {
-            eventListeners.add( listener );
-        }
-    }
-
-    public void removeUserListChangedListener( IUserListChangedListener observer )
-    {
-        eventListeners.remove( observer );
-    }
-
     public boolean reloadListFromJson(String jsonList) {
         boolean result = false;
         try {
@@ -90,13 +76,6 @@ public class PeopleTagApplication extends Application {
         }
 
         return result;
-    }
-
-    public void notifiyListeners() {
-        // notify Listeners
-        for(IUserListChangedListener listener : eventListeners) {
-            listener.userListChanged(this);
-        }
     }
 
     public void setPrefShowall(Boolean enabled) {
