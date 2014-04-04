@@ -13,6 +13,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".gui.SonarPanelActivity"/>
+        <activity android:name=".gui.RadarActivity" android:screenOrientation="portrait" />
         <service android:name=".service.GeoTracker"/>
         <activity android:name=".gui.SetupActivity"/>
         <activity android:name=".gui.AddUserActivity">

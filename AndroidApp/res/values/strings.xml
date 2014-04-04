@@ -15,4 +15,9 @@
     <!-- setup Strings -->
     <string name="ui_setup_noname">ERROR: Please enter your name</string>
     <string name="ui_setup_error">ERROR while registering user!</string>
+	
+	    <string name="scanning">Scanning...</string>
+    
+    <string name="menu_standard">Standard</string>
+    <string name="menu_metric">Metric</string>
 </resources>
