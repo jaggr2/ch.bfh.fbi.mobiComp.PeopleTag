@@ -23,7 +23,7 @@ public class PeopleTagApplication extends Application {
     public static final String PREF_SHOWALL = "showAllUsers";
     private SharedPreferences settings = null;
 
-    private ConcurrentLinkedQueue<UserData> users = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<UserData> users = new ConcurrentLinkedQueue<UserData>();
 
     public String getUserID() {
         return (settings != null ? this.settings.getString(PREF_ID, "") : "");

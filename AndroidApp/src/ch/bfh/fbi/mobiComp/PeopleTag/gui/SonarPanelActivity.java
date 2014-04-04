@@ -5,12 +5,14 @@ import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.hardware.*;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.Toast;
 import ch.bfh.fbi.mobiComp.PeopleTag.R;
 import android.content.Context;
 import ch.bfh.fbi.mobiComp.PeopleTag.model.UserData;
@@ -67,6 +69,8 @@ public class SonarPanelActivity extends Activity implements View.OnClickListener
         {
             if (intent.getParcelableExtra("location") instanceof Location) {
                 currentLocation = intent.getParcelableExtra("location");
+                Toast.makeText(context, currentLocation.toString(),
+                        Toast.LENGTH_SHORT).show();
             }
             else if (intent.getParcelableExtra("location") == null)
             {
@@ -96,8 +100,13 @@ public class SonarPanelActivity extends Activity implements View.OnClickListener
         registerReceiver(receiver, updateRecive);
 
         // Get initial Location....
-        GeoTracker geoTracker = new GeoTracker();
-        currentLocation = geoTracker.getLocation();
+        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+        String bestProvider = locationManager.getBestProvider(criteria, false);
+         currentLocation = locationManager.getLastKnownLocation(bestProvider);
+
+        System.out.println("cuur"+currentLocation);
+
         sonarView.setCurrent(currentLocation);
 
        // handler.postDelayed(serverUpdate, 30 * 1000);
@@ -114,6 +123,11 @@ public class SonarPanelActivity extends Activity implements View.OnClickListener
             userId= (String) savedInstanceState.getSerializable("user");
         }
         this.userid = userId;
+
+        System.out.println("userid"+userId);
+        UserData user = ((PeopleTagApplication)getApplication()).getUserById(userId);
+        System.out.println("asfdasfs"+user);
+        sonarView.setUserLocation(user);
 
         //UserInfoDownloader userInfoDownloader = new UserInfoDownloader(this);
         //userInfoDownloader.execute();
