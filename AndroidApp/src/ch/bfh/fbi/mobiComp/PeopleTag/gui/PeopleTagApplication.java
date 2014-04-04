@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import ch.bfh.fbi.mobiComp.PeopleTag.model.UserData;
 
+import java.util.LinkedList;
+
 /**
  * Created by roger.jaggi on 28.03.2014.
  */
@@ -16,6 +18,8 @@ public class PeopleTagApplication extends Application {
     public static final String PREF_SHOWALL = "showAllUsers";
     private SharedPreferences settings = null;
 
+    private LinkedList<UserData> users = new LinkedList<>();
+
     public String getUserID() {
         return (settings != null ? this.settings.getString(PREF_ID, "") : "");
     }
@@ -26,6 +30,19 @@ public class PeopleTagApplication extends Application {
 
     public Boolean getPrefShowall() {
         return (settings != null && this.settings.getBoolean(PREF_SHOWALL, false));
+    }
+
+    public LinkedList<UserData> getUsers() {
+        return users;
+    }
+
+    public UserData getUserById(String Id) {
+        for (UserData userData : users) {
+            if(userData.getId().equals(Id)) {
+                return userData;
+            }
+        }
+        return null;
     }
 
     public void setPrefShowall(Boolean enabled) {
